@@ -1,105 +1,114 @@
-
-import { StyleSheet, TextInput, TouchableOpacity, View, Text as TextRN, ActivityIndicator } from "react-native";
-// import { CheckBox } from "react-native-web";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ImgBackground from '../components/ImgBackground'
-// import { TouchableOpacity } from "react-native-gesture-handler";
 import { View as ViewAN, Text, Image } from "react-native-animatable";
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
-// import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useEffect } from "react";
-import store from '../components/redux/store'
-import { Provider, useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import SignUp from "../components/SignUp";
-import { useState } from "react";
-import { GetReq, PostReq } from "../apiCalls/api";
-import { Loandata } from "../data";
+import { PostReq } from "../apiCalls/api";
 import { useNavigation } from "@react-navigation/native";
+import KeyboardAvoidingWrapper from "../components/wrappers/KeyboardAvoidingView";
+
 export default function Login() {
   const [dataa, setdata] = useState({
     Phone: '',
     Password: '',
-  })
-  const [isSelected, setSelection] = useState(false);
-  const [user, setuser] = useState(null)
-  const [loading, setloading] = useState(false)
-  let d;
+  });
+  const [loading, setloading] = useState(false);
+  const [signupVisible, setsignupVisible] = useState(false);
   const dispatch = useDispatch();
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+
   const nav = async (data) => {
-    dispatch({
-      type: 'login',
-      data: data[0]
-    })
-    await AsyncStorage.setItem('user', JSON.stringify(data[0]))
-    setloading(false)
+    dispatch({ type: 'login', data: data[0] });
+    await AsyncStorage.setItem('user', JSON.stringify(data[0]));
+    setloading(false);
     if (data[0].Role === 'Admin')
-      navigation.navigate('admindashboard', { name: 'Jane' })
+      navigation.navigate('admindashboard', { name: 'Jane' });
     else
-      navigation.navigate('Home', { name: 'Jane' })
-  }
+      navigation.navigate('Home', { name: 'Jane' });
+  };
+
   const Login = async () => {
-
     try {
-      setloading(!loading)
-      let user = await PostReq('/login', dataa, '', nav)
+      setloading(true);
+      let user = await PostReq('/login', dataa, '', nav);
       if (user?.data?.length == 0) {
-        alert('Wrong Username or Password!')
-        setloading(false)
-        return
+        alert('Wrong Username or Password!');
+        setloading(false);
+        return;
       }
-      setuser(user)
+    } catch (e) {
+      console.warn(e);
+      setloading(false);
     }
-    catch (e) {
-      console.warn(e)
-    }
-  }
-  const [signupVisible, setsignupVisible] = useState(false)
+  };
+
   return (
-
     <View style={styles.container}>
-      <View style={styles.main}>
-        <ImgBackground imguri="https://e1.pxfuel.com/desktop-wallpaper/258/677/desktop-wallpaper-iphone7papers-blue-blur.jpg">
-          <Image style={styles.img} animation="zoomInDown" Easing='easeIn' duration={1500} source={require('../../assets/BANNERLOGO.jpg')} />
+      <KeyboardAvoidingWrapper>
+        <Image
+          style={styles.img}
+          animation="zoomInDown"
+          easing="ease-in"
+          duration={1500}
+          source={require('../../assets/BANNERLOGO.jpg')}
+        />
 
-          {
-            !signupVisible ?
+        {!signupVisible ? (
+          <ViewAN style={styles.container2} animation="slideInUp" duration={800}>
+            <Text style={styles.title2}>Login</Text>
 
-              <ViewAN style={styles.container2} animation="slideInUp" duration={800}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Phone"
+              placeholderTextColor="#999"
+              keyboardType="numeric"
+              defaultValue={dataa.Phone}
+              onChangeText={(e) => setdata({ ...dataa, Phone: e })}
+            />
 
-                <Text style={styles.title2} animation="slideInUp" duration={600}>Login</Text>
-                {/* <Text style={styles.subtitle} animation="slideInUp" duration={1100}>Enter Username </Text> */}
-                <TextInput style={styles.textInput} placeholder="Phone.."
-                  defaultValue={dataa.Phone}
-                  onChangeText={(e) => setdata({ ...dataa, 'Phone': e })}
-                />
-                {/* <Text style={styles.subtitle} animation="slideInUp" duration={1100}>Enter Password </Text> */}
-                <TextInput style={styles.textInput} placeholder="Password.."
-                  defaultValue={dataa.Password}
-                  onChangeText={(e) => setdata({ ...dataa, 'Password': e })}
-                />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Password"
+              placeholderTextColor="#999"
+              secureTextEntry
+              defaultValue={dataa.Password}
+              onChangeText={(e) => setdata({ ...dataa, Password: e })}
+            />
 
-                <TouchableOpacity style={styles.button} onPress={() =>
-                  Login()
-                }><Text style={styles.buttonText}>
-                    Sign in</Text>
-                  {!loading ?
-                    <AntDesign name="login" size={24} color="#fff" />
-                    :
-                    <ActivityIndicator size={30} color="#fff" />
-                  }
+            <TouchableOpacity
+              style={[styles.button, loading && styles.buttonDisabled]}
+              onPress={Login}
+              disabled={loading}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.buttonText}>Sign in</Text>
+              {!loading ? (
+                <AntDesign name="login" size={22} color="#fff" />
+              ) : (
+                <ActivityIndicator size={22} color="#fff" />
+              )}
+            </TouchableOpacity>
 
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() =>
-                  setsignupVisible(true)
-                }><Text style={styles.buttonText}>Create Account</Text>
-                  {/* <MaterialCommunityIcons name="account-edit-outline" size={24} color="#fff" /> */}
-                </TouchableOpacity>
-              </ViewAN>
-              : <SignUp setsignupVisible={setsignupVisible} />}
-        </ImgBackground>
-      </View>
+            <TouchableOpacity
+              style={[styles.button, styles.secondaryButton]}
+              onPress={() => setsignupVisible(true)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.buttonText}>Create Account</Text>
+            </TouchableOpacity>
+          </ViewAN>
+        ) : (
+          <SignUp setsignupVisible={setsignupVisible} />
+        )}
+      </KeyboardAvoidingWrapper>
     </View>
   );
 }
@@ -107,84 +116,66 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#121212',
   },
   img: {
-    width: '70%',
-    height: '18%',
+    width: '55%',
+    height: undefined,
+    aspectRatio: 1.8,
     alignSelf: 'center',
     borderRadius: 20,
-    marginBottom: -100,
-    zIndex: 1,
-    marginTop: 30,
+    marginTop: 60,
+    marginBottom: 10,
   },
-  checkbox: {
-    alignSelf: 'center',
-  },
-
   buttonText: {
-    marginLeft: 15,
+    marginLeft: 12,
     color: '#fff',
-    paddingVertical: 10
+    fontSize: 15,
+    fontWeight: '600',
   },
   container2: {
-    width: '80%',
+    width: '85%',
     alignSelf: 'center',
-    backgroundColor: "rgba(9, 9, 9, 0.2)",
+    backgroundColor: 'rgba(255,255,255,0.06)',
     borderRadius: 20,
-    padding: 30,
-    paddingTop: 100,
-    justifyContent: 'flex-start'
-
-  }
-  ,
+    padding: 28,
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
   textInput: {
-    fontSize: 18,
+    fontSize: 16,
     marginVertical: 8,
-    // border: ["aliceblue", "0px solid black"],
-    borderBottomWidth: 1,
-  },
-  main: {
-    flex: 1,
-    // maxWidth: 960,
-    display: 'flex',
-    height: '100%',
-    justifyContent: 'flex-start'
-    // marginHorizontal: "auto",
-
-  },
-  title: {
-    alignSelf: 'center',
-    paddingBottom: 30,
-    fontSize: 64,
-    fontWeight: "bold",
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+    borderBottomWidth: 1.5,
+    borderBottomColor: 'rgba(255,255,255,0.3)',
+    color: '#fff',
   },
   title2: {
-    fontSize: 50,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 20,
-    color: "#000",
-  },
-  Link: {
-    fontSize: 25,
-    color: "#fff",
-    padding: 10,
-    // backgroundColor:'red',
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 20,
     textAlign: 'center',
-    width: '100%'
   },
   button: {
-    display: 'flex',
     flexDirection: 'row-reverse',
-    // width:200,
-    backgroundColor: 'grey',
-    justifyContent: 'flex-end',
-    paddingLeft: 10,
-    paddingRight: 15,
-    marginTop: 10,
+    backgroundColor: '#1f6feb',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    marginTop: 14,
     borderRadius: 16,
-    backgroundColor: "#000",
-    alignItems: "center"
-  }
+  },
+  secondaryButton: {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+  buttonDisabled: {
+    opacity: 0.7,
+  },
 });

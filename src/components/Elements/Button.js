@@ -11,7 +11,7 @@ txtcolor = lightTheme.primary,mwidth= 250,...props}) => {
    disabled = {disabled}
    >
     {props.children}
-    <Text style ={{...styles.text, paddingLeft:'10px',...{color: txtcolor}}}>{text}</Text>
+    <Text style={{...styles.text, paddingLeft: 10, ...{color: txtcolor}}}>{text}</Text>
    </TouchableOpacity>
   )
 }
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     },
     text:{
       textAlign:'center',
-      padding : '10px'
+      padding : 10
         // fontSize:18,
         // color:lightTheme.primary
     },

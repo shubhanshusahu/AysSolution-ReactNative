@@ -56,16 +56,16 @@ export const BaseUrl ='https://ays-backend1.vercel.app/'
 
 // export const BaseUrl ='https://9b56-2405-201-300d-e0d4-249a-75a8-87d5-4c59.ngrok-free.app'
 export const lightTheme = {
-    primary: "#ffffffff",
-    Secondary: '#000',
-    button: '#000',
-    blue: '#002df7',
-    success: '#00ff62de',
-    darkSuccess: '#197b3fff',
-    warning: '#ffa6006f',
-    close: '#ff040077',
-    lightGrey: '#d3d3d37b',
-    grey: '#656565ff'
+    primary: "#F5F5F7",      // soft off-white instead of pure white — easier on the eyes
+    Secondary: '#1C1C1E',     // near-black, softer than pure #000
+    button: '#1C1C1E',        // matches Secondary for consistency
+    blue: '#3B82F6',          // modern muted blue instead of harsh #002df7
+    success: '#22C55E',       // clean solid green instead of neon translucent
+    darkSuccess: '#15803D',   // deeper green for contrast/pressed states
+    warning: '#F59E0B',       // solid amber instead of translucent orange
+    close: '#EF4444',         // solid red instead of translucent
+    lightGrey: '#E5E5EA',     // clean light grey, opaque
+    grey: '#6B7280',          // balanced mid-grey
 }
 export const statuses = ["Applied", "Call not picked", "Not Reachable", "Not interested", "Interested", "In Progress"
     , "Follow up", "Converted", "Closed", "Property not approved", "Profile not matched", "Sanctioned"

@@ -1,66 +1,64 @@
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { lightTheme } from '../../data'
 import { useNavigation } from '@react-navigation/native'
-import {  Text } from "react-native-animatable";
+import { Text } from "react-native-animatable"
+
 export default function NumberCard(props) {
   const navigation = useNavigation()
+
   const navv = (q) => {
-    if(props.num == 0 || props.num == '0'){
+    if (props.num == 0 || props.num == '0') {
       alert('No records found!')
       return
     }
-    if(props?.access ==='agentRefferal')
-    {
-      navigation.navigate('referrals', { quer: `Referedby ='${q}'` ,access : 'agentreferrals'})
-    }
-    else{
-      navigation.navigate('leadview', { quer: q ,access : props.access || 'admin'})
+    if (props?.access === 'agentRefferal') {
+      navigation.navigate('referrals', { quer: `Referedby ='${q}'`, access: 'agentreferrals' })
+    } else {
+      navigation.navigate('leadview', { quer: q, access: props.access || 'admin' })
     }
   }
 
   return (
-    <TouchableOpacity style={styles.main} onPress={() => navv(props.query)}>
-
-      <Text  style={styles.header}>{props.title}</Text>
-      <Text animation="flipInX" duration={1200} style={styles.num}>{props.num}</Text>
-
+    <TouchableOpacity style={styles.main} onPress={() => navv(props.query)} activeOpacity={0.75}>
+      <Text style={styles.header}>{props.title}</Text>
+      <Text animation="flipInX" duration={1200} style={styles.num}>
+        {props.num === null || props.num === undefined ? '—' : props.num}
+      </Text>
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
-
   main: {
-    display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '40%',
-    margin: 10,
-    // marginTop: 0,
-    backgroundColor: lightTheme.primary,
+    width: '46%',
+    margin: 6,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
     textAlign: 'center',
-    padding: 20,
-    borderRadius: 30,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.46,
-    shadowRadius: 11.14,
-
-    elevation: 17,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    borderRadius: 22,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10,
   },
   header: {
-    // fontSize : 18,
     width: '100%',
     textAlign: 'center',
-    // backgroundColor :'blue',
-    fontWeight: 'bold'
+    fontWeight: '600',
+    fontSize: 13,
+    color: '#b5b5b5',
+    marginBottom: 6,
   },
   num: {
-    fontSize: 50,
-    fontWeight: '200'
-  }
+    fontSize: 42,
+    fontWeight: '700',
+    color: '#fff',
+  },
 })

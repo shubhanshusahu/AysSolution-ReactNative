@@ -1,32 +1,27 @@
-import { View, Text, Dimensions, ImageBackground, StyleSheet } from 'react-native'
+// components/ImgBackground.js
+import { ImageBackground, StyleSheet, View } from 'react-native'
 import React from 'react'
 
-const screenHeight = Dimensions.get('window').height;
-const screenWidth = Dimensions.get('window').width;
 export default function ImgBackground(props) {
   return (
-    <View style ={{maxHeight:'100%',width:'100%'}}>
     <ImageBackground
-    source={typeof props.imguri === 'string' ? { uri: props.imguri } : props.imguri}
-    resizeMode="cover"
-    style={styles.img}>
-       <View style={{width:"100%"}}>{props.children}</View> 
-        </ImageBackground></View>
+      source={typeof props.imguri === 'string' ? { uri: props.imguri } : props.imguri}
+      resizeMode="cover"
+      blurRadius={4}
+      style={styles.img}
+    >
+      <View style={styles.overlay}>{props.children}</View>
+    </ImageBackground>
   )
 }
 
-
-
 const styles = StyleSheet.create({
-  
-    img: {
-      height: "100%",
-      width: screenWidth,
-      justifyContent: 'center',
-      // alignItems: 'flex-start',
-
-        // flex: 1,
-        // maxWidth: 960,
-        marginHorizontal: "auto",
-    },
+  img: {
+    flex: 1,
+    width: '100%',
+  },
+  overlay: {
+    flex: 1,
+    width: '100%',
+  },
 })

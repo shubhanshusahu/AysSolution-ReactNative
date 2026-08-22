@@ -1,9 +1,9 @@
 # ninja log v5
-12	215	0	D:/AYS-rn/android/app/.cxx/Debug/1y573765/arm64-v8a/CMakeFiles/cmake.verify_globs	545bcb7d6e67fe70
+8	136	0	D:/AYS-rn/android/app/.cxx/Debug/1y573765/arm64-v8a/CMakeFiles/cmake.verify_globs	545bcb7d6e67fe70
 67956	84327	8085811935019172	RNImagePickerSpec_autolinked_build/CMakeFiles/react_codegen_RNImagePickerSpec.dir/react/renderer/components/RNImagePickerSpec/States.cpp.o	a269ba89d70866a3
 25458	55508	8085811647609215	rngesturehandler_codegen_autolinked_build/CMakeFiles/react_codegen_rngesturehandler_codegen.dir/react/renderer/components/rngesturehandler_codegen/ComponentDescriptors.cpp.o	52a46b984af497b
 553	18320	8085811276309175	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/EventEmitters.cpp.o	30885930d45f1ac7
-533	26971	8085811361539205	CMakeFiles/appmodules.dir/OnLoad.cpp.o	e7d61dd7ee66c215
+86	26338	8090956429933596	CMakeFiles/appmodules.dir/OnLoad.cpp.o	e7d61dd7ee66c215
 673	23817	8085811331149205	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/react/renderer/components/rnasyncstorage/ShadowNodes.cpp.o	82c67ad33e00656f
 23819	45286	8085811546049203	rnasyncstorage_autolinked_build/CMakeFiles/react_codegen_rnasyncstorage.dir/rnasyncstorage-generated.cpp.o	652f1ba62a5f87cc
 153829	181953	8085812912099217	rnscreens_autolinked_build/CMakeFiles/react_codegen_rnscreens.dir/D_/AYS-rn/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSSafeAreaViewState.cpp.o	c95e4e8816a0faa1
@@ -24,7 +24,7 @@
 77181	101187	8085812105399200	RNImagePickerSpec_autolinked_build/CMakeFiles/react_codegen_RNImagePickerSpec.dir/react/renderer/components/RNImagePickerSpec/Props.cpp.o	488348a4bfc5d841
 55510	77789	8085811867269177	RNImagePickerSpec_autolinked_build/CMakeFiles/react_codegen_RNImagePickerSpec.dir/RNImagePickerSpec-generated.cpp.o	b1c7fef71781ace5
 253209	269598	8085813789569205	rnscreens_autolinked_build/CMakeFiles/react_codegen_rnscreens.dir/a22dea7b2be7cda7f1b59fdaecd35a58/android/build/generated/source/codegen/jni/react/renderer/components/rnscreens/States.cpp.o	8c9cef6daf640012
-126	84912	8085811937789194	CMakeFiles/appmodules.dir/D_/AYS-rn/android/app/build/generated/autolinking/src/main/jni/autolinking.cpp.o	7aff8ae19abcbe24
+1773	61997	8090956784353582	CMakeFiles/appmodules.dir/D_/AYS-rn/android/app/build/generated/autolinking/src/main/jni/autolinking.cpp.o	7aff8ae19abcbe24
 100286	118301	8085812273219193	rnreanimated_autolinked_build/CMakeFiles/react_codegen_rnreanimated.dir/react/renderer/components/rnreanimated/EventEmitters.cpp.o	e364edd90de373b4
 354302	371885	8085814814269204	RNVectorIconsSpec_autolinked_build/CMakeFiles/react_codegen_RNVectorIconsSpec.dir/react/renderer/components/RNVectorIconsSpec/EventEmitters.cpp.o	77f973188371b57
 77791	102496	8085812117799163	rnreanimated_autolinked_build/CMakeFiles/react_codegen_rnreanimated.dir/react/renderer/components/rnreanimated/ComponentDescriptors.cpp.o	7efdf14f9c2958ea
@@ -52,7 +52,7 @@
 141296	171739	8085812810579189	rnscreens_autolinked_build/CMakeFiles/react_codegen_rnscreens.dir/D_/AYS-rn/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostShadowNode.cpp.o	1ab03078c0f52b7b
 108356	141294	8085812506409202	safeareacontext_autolinked_build/CMakeFiles/react_codegen_safeareacontext.dir/e9accdec84e560072a49247b944eb1f5/codegen/jni/react/renderer/components/safeareacontext/ComponentDescriptors.cpp.o	5c3bd41283561564
 331823	351073	8085814603959218	rnworklets_autolinked_build/CMakeFiles/react_codegen_rnworklets.dir/react/renderer/components/rnworklets/EventEmitters.cpp.o	36a2173d4286ad1e
-154041	157579	8085812668359210	D:/AYS-rn/android/app/build/intermediates/cxx/Debug/1y573765/obj/arm64-v8a/libreact_codegen_safeareacontext.so	f7a449dfd0fdd1a2
+834	6937	8090956226383591	D:/AYS-rn/android/app/build/intermediates/cxx/Debug/1y573765/obj/arm64-v8a/libreact_codegen_safeareacontext.so	f7a449dfd0fdd1a2
 174840	211914	8085813212469207	rnscreens_autolinked_build/CMakeFiles/react_codegen_rnscreens.dir/D_/AYS-rn/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSSafeAreaViewShadowNode.cpp.o	3b24bdb6a6f409c7
 145067	174838	8085812841819187	rnscreens_autolinked_build/CMakeFiles/react_codegen_rnscreens.dir/D_/AYS-rn/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSFullWindowOverlayShadowNode.cpp.o	ab3bfbe488d43297
 246361	270511	8085813798859216	rnscreens_autolinked_build/CMakeFiles/react_codegen_rnscreens.dir/D_/AYS-rn/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderSubviewState.cpp.o	b23e45a097005c43
@@ -73,9 +73,9 @@
 263106	314653	8085814237379218	rnscreens_autolinked_build/CMakeFiles/react_codegen_rnscreens.dir/cc8272161b5d32ac0a4bbd4d17fb248b/build/generated/source/codegen/jni/react/renderer/components/rnscreens/ComponentDescriptors.cpp.o	63460eecf6fec3e6
 309211	340528	8085814498539221	pagerview_autolinked_build/CMakeFiles/react_codegen_pagerview.dir/react/renderer/components/pagerview/Props.cpp.o	5321365c5b6ca432
 303759	329831	8085814385329137	pagerview_autolinked_build/CMakeFiles/react_codegen_pagerview.dir/react/renderer/components/pagerview/ShadowNodes.cpp.o	82a8cd94f20cfb62
-326894	331853	8085814405089157	D:/AYS-rn/android/app/build/intermediates/cxx/Debug/1y573765/obj/arm64-v8a/libreact_codegen_rnscreens.so	e900c06b9c565c38
+1514	7879	8090956234723623	D:/AYS-rn/android/app/build/intermediates/cxx/Debug/1y573765/obj/arm64-v8a/libreact_codegen_rnscreens.so	e900c06b9c565c38
 315853	331821	8085814410289160	pagerview_autolinked_build/CMakeFiles/react_codegen_pagerview.dir/react/renderer/components/pagerview/States.cpp.o	48edb807c0bc9cbd
-380656	382170	8085814916959157	D:/AYS-rn/android/app/build/intermediates/cxx/Debug/1y573765/obj/arm64-v8a/libappmodules.so	e4d0a4b7c05bdf85
+61998	64691	8090956811383580	D:/AYS-rn/android/app/build/intermediates/cxx/Debug/1y573765/obj/arm64-v8a/libappmodules.so	e4d0a4b7c05bdf85
 314655	345302	8085814546849196	pagerview_autolinked_build/CMakeFiles/react_codegen_pagerview.dir/react/renderer/components/pagerview/ComponentDescriptors.cpp.o	6fb0bdf52a1d72c0
 365186	377856	8085814874419160	RNVectorIconsSpec_autolinked_build/CMakeFiles/react_codegen_RNVectorIconsSpec.dir/react/renderer/components/RNVectorIconsSpec/States.cpp.o	a36d485f885095d3
 349083	370792	8085814801799193	RNVectorIconsSpec_autolinked_build/CMakeFiles/react_codegen_RNVectorIconsSpec.dir/RNVectorIconsSpec-generated.cpp.o	882b9ba922693c6c
@@ -87,4 +87,4 @@
 367779	380655	8085814902079129	rnworklets_autolinked_build/CMakeFiles/react_codegen_rnworklets.dir/rnworklets-generated.cpp.o	49513fd40f1315cc
 331918	349082	8085814584319205	rnworklets_autolinked_build/CMakeFiles/react_codegen_rnworklets.dir/react/renderer/components/rnworklets/States.cpp.o	dced5d2d416b4c5f
 1	480	0	clean	a6f3395905a55ca6
-6	94	0	D:/AYS-rn/android/app/.cxx/Debug/1y573765/arm64-v8a/CMakeFiles/cmake.verify_globs	545bcb7d6e67fe70
+10	181	0	D:/AYS-rn/android/app/.cxx/Debug/1y573765/arm64-v8a/CMakeFiles/cmake.verify_globs	545bcb7d6e67fe70

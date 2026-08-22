@@ -1,149 +1,326 @@
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
-import ImgBackground from '../components/ImgBackground'
-import { Image } from 'react-native-animatable'
-import Banners from '../components/Banners'
-import { useNavigation } from '@react-navigation/native'
-// import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Linking,
+} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import Banners from '../components/Banners';
+import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import data, { Loandata } from '../data'
-import { useDispatch } from 'react-redux'
-import { GetReq } from '../apiCalls/api'
+import data, { Loandata } from '../data';
+import { useDispatch } from 'react-redux';
+import { GetReq } from '../apiCalls/api';
+
+const ADVISOR_NUMBER = '9201100195';
 
 export default function LandingPage() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [advertisement, setAdvertisement] = useState([])
-  const handleLogin = async () => {
-    let user = await AsyncStorage.getItem("user")
-      .then(user => {
-        // console.log(user, 'user stored!!')
-        if (user !== null) {
-          // console.log('inside if')
-          if (JSON.parse(user).Role === 'Admin')
-            navigation.navigate('admindashboard', { name: 'Jane' })
-          else
-            navigation.navigate('Home', { name: 'Jane' })
+  const [advertisement, setAdvertisement] = useState([]);
+  const [loadingAds, setLoadingAds] = useState(true);
 
-          dispatch({
-            type: 'login',
-            data: user
-          })
-        }
-        else {
-          // console.log('inside else')
-          navigation.navigate('Login')
-        }
-      })
+const handleLogin = async () => {
+  const userStr = await AsyncStorage.getItem("user")
+  if (userStr !== null) {
+    const parsedUser = JSON.parse(userStr)
+    if (parsedUser.Role === 'Admin')
+      navigation.navigate('admindashboard', { name: 'Jane' })
+    else
+      navigation.navigate('Home', { name: 'Jane' })
 
-  }
-  const openWhatsapp = (num) => {
-    let url = "whatsapp://send?text=" +
-      'Hi AYS Solutions!' +
-      "&phone=91" +
-      num;
-    Linking.openURL(url)
-  }
-  const getAds = async () => {
-    const ads = await GetReq('/getAds')
-    let temp = ads.data.map(ad => { return { ...ad, "img": ad.imgs } })
-    console.warn(temp)
     dispatch({
-      type: 'saveAds',
-      data: temp.map(ad => { return { id: ad.idmaster, title: ad.name, img: ad.img } })
+      type: 'login',
+      data: parsedUser   // ✅ now correctly parsed
     })
-    setAdvertisement(temp)
+  } else {
+    navigation.navigate('Login')
   }
+}
+
+  const openWhatsapp = (num) => {
+    const url =
+      'whatsapp://send?text=' + 'Hi AYS Solutions!' + '&phone=91' + num;
+    Linking.openURL(url).catch(() =>
+      alert('WhatsApp is not installed on this device')
+    );
+  };
+
+  const callAdvisor = (num) => {
+    Linking.openURL(`tel:${num}`).catch(() =>
+      alert('Unable to open dialer')
+    );
+  };
+
+  const getAds = async () => {
+    try {
+      setLoadingAds(true);
+      const ads = await GetReq('/getAds');
+      const temp = ads.data.map((ad) => ({ ...ad, img: ad.imgs }));
+      dispatch({
+        type: 'saveAds',
+        data: temp.map((ad) => ({
+          id: ad.idmaster,
+          title: ad.name,
+          img: ad.img,
+        })),
+      });
+      setAdvertisement(temp);
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      setLoadingAds(false);
+    }
+  };
+
   useEffect(() => {
-    getAds()
-  }, [])
+    getAds();
+  }, []);
 
   return (
-    <View>
-      <ImgBackground imguri="https://e1.pxfuel.com/desktop-wallpaper/258/677/desktop-wallpaper-iphone7papers-blue-blur.jpg">
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>AYS Solutions</Text>
+        <TouchableOpacity style={styles.button} onPress={handleLogin} activeOpacity={0.8}>
           <Text style={styles.buttonText}>Login</Text>
-          <AntDesign name="login" size={24} color="#fff" />
+          <AntDesign name="login" size={18} color="#fff" style={{ marginLeft: 8 }} />
         </TouchableOpacity>
-        <ScrollView style={{ maxHeight: '90%' }} fadingEdgeLength={50}>
+      </View>
 
-          {advertisement !== undefined && advertisement !== null && advertisement.map((ad, i) => {
-            let data = ad.img.split(",").map((link, i) => { return { type: 'ad', id: ad.idmaster.toString(), title: ad.name, img: link } })
-            return (<View key={i} style={{ marginBottom: 3, paddingBottom :4,
-             borderBottomColor : '#372b2b5d', borderBottomWidth :1 }}>
-              <Banners data={data} />
-              <Text style={styles.AdvertiseHeading} key={i}> {ad.name}</Text>
-              <Text style={styles.AdvertiseHeading2}>  {ad.pdesc}  Range : {ad.prange} </Text>
-               {/* <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }}>
-               <TouchableOpacity onPress={() => openWhatsapp(props.lead.APhone)}>
-              <Image
-                animation="bounceInDown" Easing='easeIn' duration={1800}
-                style={styles.img} source={require('../../assets/whatsapp.png')} onPress={() => alert('pressed')} />
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        fadingEdgeLength={50}
+      >
+        {/* Advisor contact card */}
+        <View style={styles.advisorCard}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.advisorTitle}>Talk to our Advisor</Text>
+            <Text style={styles.advisorSubtitle}>Get help choosing the right plan</Text>
+          </View>
+          <View style={styles.advisorButtons}>
+            <TouchableOpacity
+              style={styles.callButton}
+              onPress={() => callAdvisor(ADVISOR_NUMBER)}
+              activeOpacity={0.8}
+            >
+              <AntDesign name="phone" size={18} color="#fff" />
             </TouchableOpacity>
-               </View> */}
-            </View>
-            )
-          }
+            <TouchableOpacity
+              style={styles.whatsappIconButton}
+              onPress={() => openWhatsapp(ADVISOR_NUMBER)}
+              activeOpacity={0.8}
+            >
+              <MaterialCommunityIcons name="whatsapp" size={20} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        </View>
 
-          )}
-           <Banners data={data} />
-          <Text style={styles.AdvertiseHeading}> Insurance Policies</Text>
-          <Text style ={styles.AdvertiseHeading2} > •Kanyadan policy •Education Policy 
-            •Pension Policy, Mediclaim Policy •Personal Accident policy
-            •Critical illness Policy •Trem Policy</Text>
-         
-          
+        {/* Dynamic ads */}
+        {loadingAds ? (
+          <ActivityIndicator size="large" color="#1f6feb" style={{ marginTop: 30 }} />
+        ) : (
+          advertisement?.map((ad, i) => {
+            const adImages = ad.img
+              .split(',')
+              .map((link) => ({
+                type: 'ad',
+                id: ad.idmaster.toString(),
+                title: ad.name,
+                img: link,
+              }));
+            return (
+              <View key={i} style={styles.card}>
+                <Banners data={adImages} />
+                <Text style={styles.cardTitle}>{ad.name}</Text>
+                <Text style={styles.cardDesc}>
+                  {ad.pdesc}  •  Range: {ad.prange}
+                </Text>
+                <View style={styles.cardActions}>
+                  <TouchableOpacity
+                    style={styles.whatsappButton}
+                    onPress={() => openWhatsapp(ADVISOR_NUMBER)}
+                    activeOpacity={0.8}
+                  >
+                    <MaterialCommunityIcons name="whatsapp" size={16} color="#fff" />
+                    <Text style={styles.actionText}>WhatsApp</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.callActionButton}
+                    onPress={() => callAdvisor(ADVISOR_NUMBER)}
+                    activeOpacity={0.8}
+                  >
+                    <AntDesign name="phone" size={14} color="#fff" />
+                    <Text style={styles.actionText}>Call</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          })
+        )}
+
+        {/* Insurance section */}
+        <View style={styles.card}>
+          <Banners data={data} />
+          <Text style={styles.cardTitle}>Insurance Policies</Text>
+          <Text style={styles.cardDesc}>
+            Kanyadan Policy · Education Policy · Pension Policy · Mediclaim
+            Policy · Personal Accident Policy · Critical Illness Policy · Term
+            Policy
+          </Text>
+        </View>
+
+        {/* Loans section */}
+        <View style={styles.card}>
           <Banners data={Loandata} />
-          <Text style={styles.AdvertiseHeading}> Loans</Text>
-          <Text style ={styles.AdvertiseHeading2} >✓Home loan ✓Plot loan ✓Top up loan ✓Mortgage loan ✓Home loan transfer ✓Personal loan ✓Business loan ✓Commercial loan</Text>
-        </ScrollView>
-      </ImgBackground>
-
-
-
+          <Text style={styles.cardTitle}>Loans</Text>
+          <Text style={styles.cardDesc}>
+            Home Loan · Plot Loan · Top-up Loan · Mortgage Loan · Home Loan
+            Transfer · Personal Loan · Business Loan · Commercial Loan
+          </Text>
+        </View>
+      </ScrollView>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    width: 120,
-    textAlign: 'center',
-    marginLeft: 10,
-    marginVertical: 10,
-    backgroundColor: 'grey',
-    justifyContent: 'flex-end',
+  container: {
+    flex: 1,
+    backgroundColor: '#121212',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginRight: 10,
-    padding: 10,
-    marginTop: 10,
-    borderRadius: 16,
-    backgroundColor: "#000",
+    paddingHorizontal: 16,
+    paddingTop: 14,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.08)',
   },
-  AdvertiseHeading: {
-    marginLeft: 20,
-    color: '#000',
+  headerTitle: {
+    color: '#fff',
+    fontSize: 20,
     fontWeight: 'bold',
-    paddingVertical: 10
   },
-  img: {
-    width: 25,
-    height: 25,
-    margin: 5,
+  scroll: {
+    flex: 1,
   },
-  AdvertiseHeading2: {
-    marginLeft: 20,
-    color: '#343434',
-    paddingVertical: 10
+  scrollContent: {
+    paddingBottom: 30,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1f6feb',
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 14,
   },
   buttonText: {
-    marginLeft: 15,
     color: '#fff',
-    paddingVertical: 10
+    fontWeight: '600',
+    fontSize: 14,
   },
-})
+  advisorCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(31,111,235,0.15)',
+    borderRadius: 16,
+    marginHorizontal: 14,
+    marginTop: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(31,111,235,0.3)',
+  },
+  advisorTitle: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  advisorSubtitle: {
+    color: '#b5b5b5',
+    fontSize: 12,
+    marginTop: 3,
+  },
+  advisorButtons: {
+    flexDirection: 'row',
+    marginLeft: 10,
+  },
+  callButton: {
+    backgroundColor: '#1f6feb',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  whatsappIconButton: {
+    backgroundColor: '#25D366',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 16,
+    marginHorizontal: 14,
+    marginTop: 14,
+    paddingBottom: 14,
+    overflow: 'hidden',
+  },
+  cardTitle: {
+    marginLeft: 16,
+    marginTop: 12,
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  cardDesc: {
+    marginLeft: 16,
+    marginTop: 6,
+    marginRight: 12,
+    color: '#b5b5b5',
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  cardActions: {
+    flexDirection: 'row',
+    marginLeft: 16,
+    marginTop: 12,
+  },
+  whatsappButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#25D366',
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+    marginRight: 10,
+  },
+  callActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1f6feb',
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+  },
+  actionText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 13,
+    marginLeft: 6,
+  },
+});

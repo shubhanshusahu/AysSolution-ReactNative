@@ -1,33 +1,33 @@
 import React from 'react'
-import { FlatList, ImageBackground, StyleSheet, } from 'react-native'
+import { StyleSheet, ScrollView, Text } from 'react-native'
 import data from '../data'
 import Card from '../components/Card'
-import ImgBackground from '../components/ImgBackground'
 import Banners from '../components/Banners'
 import { useDispatch, useSelector } from 'react-redux'
-import { View, Text, Image } from "react-native-animatable";
+import { View } from 'react-native-animatable'
 
 const Policy = ({ navigation }) => {
-
-
-  const dispatch = useDispatch();
   const policydata = data
-  // dispatch({
-  //   type: 'LeadOff',
-  //   data: data
-  // })
-  const {user} = useSelector(state => state.reducer)
-  console.warn(user)
+  const { user } = useSelector(state => state.reducer)
+
   return (
-    <View style={styles.main}  animation="fadeInUp" duration={1000}>
-      <ImgBackground imguri="https://e1.pxfuel.com/desktop-wallpaper/258/677/desktop-wallpaper-iphone7papers-blue-blur.jpg">
+    <View style={styles.main} animation="fadeInUp" duration={800}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <Banners data={policydata} />
-        <View style={styles.customflatlist}>
-          {
-            policydata.map((item, i) => <React.Fragment key={i}><Card title={item.title} img={item.img} id={item.id} /></React.Fragment>)
-          }
+
+        <Text style={styles.sectionTitle}>Insurance Policies</Text>
+        <Text style={styles.sectionSubtitle}>Choose a plan that fits your needs</Text>
+
+        <View style={styles.grid}>
+          {policydata.map((item, i) => (
+            <Card key={i} title={item.title} img={item.img} id={item.id} />
+          ))}
         </View>
-      </ImgBackground>
+      </ScrollView>
     </View>
   )
 }
@@ -35,35 +35,35 @@ const Policy = ({ navigation }) => {
 export default Policy
 
 const styles = StyleSheet.create({
-
   main: {
     flex: 1,
-    justifyContent: "center",
-    // maxWidth: 960,
-    maxHeight: '100%',
-    marginHorizontal: "auto",
-    width: "100%",
-    "backgroundImage": "url(\"paper.gif\")",
+    backgroundColor: '#121212',
   },
-  customflatlist: {
-    display: 'flex',
+  scroll: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 30,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginLeft: 16,
+    marginTop: 18,
+  },
+  sectionSubtitle: {
+    fontSize: 13,
+    color: '#9a9a9a',
+    marginLeft: 16,
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  grid: {
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    marginTop: 10,
   },
-  flatlist: {
-    // flex:1,
-    // flexDirection:'row',
-    // height:'30%',
-    overflow: "scroll",
-    display: 'flex',
-    maxHeight: 400
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 36,
-    color: "#38434D",
-  },
-});
+})

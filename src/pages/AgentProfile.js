@@ -1,15 +1,10 @@
-import { Image, Modal, RefreshControl, StyleSheet, Text, TouchableOpacity, View, ViewBase } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Image, Modal, RefreshControl, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState, useCallback } from 'react'
 import NumberCard from '../components/Elements/NumberCard'
 import { ScrollView } from 'react-native'
 import { GetReq } from '../apiCalls/api'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigation } from '@react-navigation/native'
-import Wallet from '../components/Wallet'
-import { Button } from 'react-native'
-import { lightTheme } from '../data'
+import { useSelector } from 'react-redux'
 import Refer from './Refer'
-// import { Image } from 'react-native-animatable'
 
 const AgentProfile = () => {
   const [dashCard, setdashCard] = useState({
@@ -20,122 +15,88 @@ const AgentProfile = () => {
     conv: 0,
     clos: 0,
   })
-  const dispatch = useDispatch()
-  const [modalVisible, setModalVisible] = useState(false);
-
-  let d = {}
-  const [refreshing, setRefreshing] = React.useState(false);
-  const { user } = useSelector(state => state.reducer)
-  // console.log(user)
-  let inp
-  let t
-  let pend
-  let san
-  let conv
-  let clos
-
+  const [modalVisible, setModalVisible] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [refcount, setrefcount] = useState(null)
+  const { user } = useSelector(state => state.reducer)
+
   const fetchMyReferralcount = async () => {
-    let d
-    // console.warn(quer,'quer')
-    d = await GetReq(`/getrefferedcount?quer= Referedby ='${user.ReferCode}'`)
+    const d = await GetReq(`/getrefferedcount?quer= Referedby ='${user.ReferCode}'`)
     setrefcount(d[0]?.refferals)
-    console.warn('referralcount', d)
   }
+
   const fetching = async () => {
-
-    inp = t = pend = san = conv = clos = 0;
-    console.warn(user.Phone)
-    d = await GetReq('/agentdashboard?agentPhone=' + user.Phone)
+    let inp = 0, t = 0, pend = 0, san = 0, conv = 0, clos = 0
+    const d = await GetReq('/agentdashboard?agentPhone=' + user.Phone)
     d.data.forEach(e => {
-      t = e.Total + t;
-      e.Status == "In Progress" && (inp = inp + e.Total);
-      (e.Status == "Not Reachable" || e.Status == "Call not picked" ||
-        e.Status == "Applied") && (pend = pend + e.Total);
-      e.Status == "Converted" && (conv = conv + e.Total);
-      e.Status == "Sanctioned" && (san = san + e.Total);
-      (e.Status == "Closed" || e.Status == "Property not approved" ||
-        e.Status == "Profile not matched") && (clos = clos + e.Total);
+      t += e.Total
+      if (e.Status === "In Progress") inp += e.Total
+      if (e.Status === "Not Reachable" || e.Status === "Call not picked" || e.Status === "Applied") pend += e.Total
+      if (e.Status === "Converted") conv += e.Total
+      if (e.Status === "Sanctioned") san += e.Total
+      if (e.Status === "Closed" || e.Status === "Property not approved" || e.Status === "Profile not matched") clos += e.Total
     })
-    return { inp, t, pend, san, conv, clos };
+    return { inp, t, pend, san, conv, clos }
   }
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    a();
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1000);
-  }, []);
 
-  async function a() {
-    console.warn(user)
-    const tmp = await fetching();
-    fetchMyReferralcount()
+  const loadDashboard = async () => {
+    const tmp = await fetching()
+    await fetchMyReferralcount()
     setdashCard(tmp)
-    console.warn(tmp)
-    //   dispatch({
-    //     type :'setDashboardAdmin',
-    //     data :tmp
-    // })
+    setLoading(false)
   }
-  useEffect(() => {
 
-    // if (user != null) {
-    //   console.warn(user)
-    //   setdashCard(user)
-    // }
-    // else
-    a()
-
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    loadDashboard().finally(() => setRefreshing(false))
   }, [])
 
-  const Im = () => {
-    return (
-      <View style={styles.img} onTouchEnd={() => setModalVisible(!modalVisible)}>
-        <Image style={{ width: '100%', height: '100%', marginBottom: 250 }} source={require('../../assets/referbanner.jpg')} />
-        {/* <Image style={{height:'100%'}} animation="zoomInDown" Easing='easeIn' duration={1500} source={require('../../assets/referbanner.jpg')} /> */}
-      </View>)
-  }
-  const navigation = useNavigation()
+  useEffect(() => {
+    loadDashboard()
+  }, [])
 
   return (
-    <ScrollView fadingEdgeLength={50}
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContent}
+      showsVerticalScrollIndicator={false}
+      fadingEdgeLength={50}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      style={styles.container} contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', flexDirection: 'row', flexWrap: 'wrap', }}
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" />
+      }
     >
-      {/* <TouchableOpacity style={styles.touch} > */}
-      {/* <Image style={styles.img} animation="zoomInDown" Easing='easeIn' duration={1500} source={require('../../assets/referbanner.jpg')} /> */}
-
-
-
-      {/* <Im/>  */}
-      <View style={styles.Heading}>
-        <Text style={styles.HeadingText}>Dashboard</Text>
+      <View style={styles.headerRow}>
+        <View>
+          <Text style={styles.greeting}>Welcome back,</Text>
+          <Text style={styles.userName}>{user?.Name || 'Agent'}</Text>
+        </View>
+        <View style={styles.referralPill}>
+          <Text style={styles.referralPillText}>{user?.ReferCode || '—'}</Text>
+        </View>
       </View>
 
-      {/* </TouchableOpacity> */}
-      {/* removed wallet for solving playstore issue (temporarilys) */}
-      {/* <Wallet /> */}
-      <NumberCard title="Total Leads" num={dashCard.t} query={'/'} access="agent" />
-      <NumberCard title="In Progress Leads" num={dashCard.inp} query={'Status = "In Progress" and AgentId =' + user.Phone} access="agent" />
-      <NumberCard title="Pending Leads" num={dashCard.pend}
-        query={'(Status = "Not Reachable" or Status = "Call not picked" or Status = "Applied") and AgentId = ' + user.Phone} access="agent" />
-      <NumberCard title="Sanction Leads" num={dashCard.san} query={'Status = "Sanctioned" and AgentId = ' + user.Phone} access="agent" />
-      <NumberCard title="Converted Leads" num={dashCard.conv} query={'Status = "Converted" and AgentId = ' + user.Phone} access="agent" />
-      <NumberCard title="Closed Leads" num={dashCard.clos}
-        query={'(Status = "Closed" or Status = "Profile not matched" or Status = "Property not approved" ) and AgentId = ' + user.Phone}
-        access="agent" />
-      <NumberCard title="My Referrals" num={refcount} query={user.ReferCode} access="agentRefferal" />
+      <Text style={styles.sectionLabel}>Overview</Text>
+
+      <View style={styles.grid}>
+        <NumberCard title="Total Leads" num={dashCard.t} query={'/'} access="agent" />
+        <NumberCard title="In Progress" num={dashCard.inp} query={'Status = "In Progress" and AgentId =' + user.Phone} access="agent" />
+        <NumberCard title="Pending" num={dashCard.pend}
+          query={'(Status = "Not Reachable" or Status = "Call not picked" or Status = "Applied") and AgentId = ' + user.Phone} access="agent" />
+        <NumberCard title="Sanctioned" num={dashCard.san} query={'Status = "Sanctioned" and AgentId = ' + user.Phone} access="agent" />
+        <NumberCard title="Converted" num={dashCard.conv} query={'Status = "Converted" and AgentId = ' + user.Phone} access="agent" />
+        <NumberCard title="Closed" num={dashCard.clos}
+          query={'(Status = "Closed" or Status = "Profile not matched" or Status = "Property not approved" ) and AgentId = ' + user.Phone}
+          access="agent" />
+        <NumberCard title="My Referrals" num={refcount} query={user.ReferCode} access="agentRefferal" />
+      </View>
 
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          //   Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
+        onRequestClose={() => setModalVisible(!modalVisible)}
+      >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Refer setModalVisible={setModalVisible} ReferCode={user.ReferCode} />
@@ -149,42 +110,72 @@ const AgentProfile = () => {
 export default AgentProfile
 
 const styles = StyleSheet.create({
-  img: {
-    width: '100%',
-    padding: 5,
-    height: '22%',
-
-  },
-  Heading: {
-    width: '85%',
-    marginBlock: 20
-  },
-  HeadingText: {
-    fontSize: 25,
-  },
   container: {
-    maxHeight: '100%',
+    flex: 1,
+    backgroundColor: '#121212',
+  },
+  scrollContent: {
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 30,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  greeting: {
+    color: '#9a9a9a',
+    fontSize: 13,
+  },
+  userName: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginTop: 2,
+  },
+  referralPill: {
+    backgroundColor: 'rgba(31,111,235,0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(31,111,235,0.3)',
+    borderRadius: 14,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  referralPillText: {
+    color: '#1f6feb',
+    fontWeight: '700',
+    fontSize: 13,
+  },
+  sectionLabel: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    width: '85%',
+    backgroundColor: '#2f2f2f',
     borderRadius: 20,
-    padding: 35,
+    padding: 30,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
   },
-
 })

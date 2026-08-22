@@ -1,76 +1,56 @@
 import React from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
-import {  Image, StyleSheet, Text, TouchableNativeFeedback, TouchableOpacity } from "react-native";
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
 const Card = (props) => {
+  const navigation = useNavigation()
 
-const dispatch =useDispatch();
-const Leadof = useSelector(state => state.reducer)
-const navigation = useNavigation();
-const LeadGen = async(data)=>{
-  console.warn('lllllllead',data)
-  navigation.navigate('Lead', {userroute : 'Logged in',dataroute : data})
-}
+  const LeadGen = (data) => {
+    navigation.navigate('Lead', { userroute: 'Logged in', dataroute: data })
+  }
 
   return (
-   <TouchableOpacity style ={styles.curve} key={props.id} onPress={()=> LeadGen(props)} >
-      <Image 
+    <TouchableOpacity
+      style={styles.card}
+      activeOpacity={0.85}
+      onPress={() => LeadGen(props)}
+    >
+      <Image
         style={styles.img}
         source={typeof props.img === 'string' ? { uri: props.img } : props.img}
       />
-    <Text style ={styles.title}>{props.title}</Text>
-   </TouchableOpacity>
+      <Text style={styles.title} numberOfLines={1}>{props.title}</Text>
+    </TouchableOpacity>
   )
 }
 
 export default Card
 
 const styles = StyleSheet.create({
-    curve: {
-      display: "flex",
-      border: "0px solid black",
-      // paddingTop: "10px",
-      // paddingBottom:"15px",
-      width: "46%",
-      borderRadius: 16,
-      flexDirection: "column",
-      alignItems: "center",
-      margin:7,
-      height: 145,
-      backgroundColor: '#12124a',
-      shadowColor: '#000',
-      shadowOffset: { width: 2, height: 2 },
-      shadowOpacity: 1,
-      shadowRadius: 2,
-      elevation: 12,
-      textAlign:'center',
-      // justifyContent:'center'
-    },
-    img:{
-      width: "95%",
-      borderRadius:13,
-      height : "100%",
-      maxHeight:110,
-      marginTop: 4,
-      // WebkitMaskImage: "linear-gradient(to bottom, black 50%, transparent 100%)"
-    },
-    main: {
-      flex: 1,
-      justifyContent: "center",
-      maxWidth: 960,
-      marginHorizontal: "auto",
-    },
-    title: {
-      // position: 'absolute', top: 84, left: "17%", right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center',
-      color: '#dadada',
-
-      fontSize: 15,
-
-    },
-    subtitle: {
-      fontSize: 36,
-      color: "#38434D",
-    },
-  });
-  
+  card: {
+    width: '46%',
+    borderRadius: 16,
+    alignItems: 'center',
+    margin: 7,
+    paddingBottom: 10,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 6,
+    overflow: 'hidden',
+  },
+  img: {
+    width: '100%',
+    height: 110,
+  },
+  title: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+    marginTop: 8,
+    paddingHorizontal: 6,
+    textAlign: 'center',
+  },
+})
