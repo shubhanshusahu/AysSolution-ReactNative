@@ -1,2 +1,101 @@
-node_modules
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# env
 .env
+.env.local
+.env.*.local
+
+# OSX
+.DS_Store
+
+# Xcode
+ios/build/
+ios/Pods/
+ios/DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+
+# Android/IntelliJ
+android/app/build/
+android/build/
+android/.gradle/
+android/app/.cxx/
+android/local.properties
+android/app/release/
+android/app/debug/
+android/keystores/*.jks
+android/keystores/*.keystore
+*.iml
+.idea/
+.gradle/
+local.properties
+*.hprof
+
+# CocoaPods
+/ios/Pods/
+
+# Ruby / Bundler
+/vendor/bundle/
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Expo (leftover, safe even in bare RN)
+.expo/
+.expo-shared/
+web-build/
+dist/
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+*.log
+*.orig.*
+buck-out/
+*.jsbundle
+
+# Bundle artifacts
+*.jsbundle
+
+# CI
+/fastlane/report.xml
+/fastlane/Preview.html
+/fastlane/screenshots
+/fastlane/test_output
+
+# Temporary files created by Metro to check the health of the file watcher
+.metro-health-check*
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
