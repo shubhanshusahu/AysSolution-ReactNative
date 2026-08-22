@@ -53,14 +53,13 @@ const LeadGenerate = ({ route }) => {
   }
   return (
     <View>
-      <ImgBackground imguri={dataroute.img}>
+      <ImgBackground  imguri={dataroute.img}>
         <View animation="slideInUp" duration={1000} style={styles.curve} >
           <Image
             style={styles.img}
             animation="fadeInDownBig" duration={800}
-            source={{
-              uri: dataroute.img,
-            }}
+            source={typeof dataroute.img === 'string' ? { uri: dataroute.img } : dataroute.img}
+
           />
           <Text animation="zoomInDown" duration={900}
             style={styles.title}>{dataroute.title}

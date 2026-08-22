@@ -1,5 +1,5 @@
-
 import { View, Text, Image } from "react-native-animatable";
+import { Image as RNImage } from 'react-native';
 import React from 'react'
 import { ImageSlider } from '@pembajak/react-native-image-slider-banner'
 import { StyleSheet } from 'react-native'
@@ -11,10 +11,17 @@ export default function Banners(props) {
     // console.log(e,'console line 11')
     navigation.navigate('Lead', { dataroute: e, userroute: 'Anonymous' })
   }
+  // The image slider library expects every item's image to be a URI string.
+  // Loandata/policy data can contain local require()'d images (numbers), so
+  // resolve those to a real URI string before handing the data to the slider.
+  const sliderData = (props.data || []).map(item => ({
+    ...item,
+    img: typeof item.img === 'string' ? item.img : RNImage.resolveAssetSource(item.img).uri,
+  }))
   return (
     <View animation="flipInX" duration={1000}>
       <ImageSlider
-        data={props.data}
+        data={sliderData}
         autoPlay={false}
         onClick={(e) => navtoApply(e)}
         preview={false}

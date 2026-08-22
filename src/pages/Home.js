@@ -75,18 +75,18 @@ export default class TabViewExample extends React.Component {
 
   render() {
     return (
-      // <TabView
-      //   navigationState={this.state}
-      //   renderScene={this._renderScene}
-      //   renderTabBar={this._renderTabBar}
-      //   onIndexChange={this._handleIndexChange}
-      //   collapsable={true}
-      //   accessibilityIgnoresInvertColors
-      // // swipeEnabled ={false}
-      // // style={{maxHeight : "100%"}}
-      // />
+      <TabView
+        navigationState={this.state}
+        renderScene={this._renderScene}
+        renderTabBar={this._renderTabBar}
+        onIndexChange={this._handleIndexChange}
+        collapsable={true}
+        accessibilityIgnoresInvertColors
+      // swipeEnabled ={false}
+      // style={{maxHeight : "100%"}}
+      />
 
-      <View></View>
+      // <View></View>
     );
   }
 }

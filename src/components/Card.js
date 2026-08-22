@@ -17,9 +17,7 @@ const LeadGen = async(data)=>{
    <TouchableOpacity style ={styles.curve} key={props.id} onPress={()=> LeadGen(props)} >
       <Image 
         style={styles.img}
-        source={{
-          uri:props.img,
-        }}
+        source={typeof props.img === 'string' ? { uri: props.img } : props.img}
       />
     <Text style ={styles.title}>{props.title}</Text>
    </TouchableOpacity>

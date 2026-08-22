@@ -151,12 +151,12 @@ const LeadsView = ({ route }) => {
     <>{
       access =='admin' &&
       <View animation="slideInUp" duration={800} style={styles.row}>
-        <Button text={calvisible ? 'Close calendar' : "Pick by Date"} color={calvisible ? lightTheme.close : lightTheme.lightGrey}
+        {/* <Button text={calvisible ? 'Close calendar' : "Pick by Date"} color={calvisible ? lightTheme.close : lightTheme.lightGrey}
           txtcolor={lightTheme.Secondary}
           action={() => setcalvisible(!calvisible)} mwidth={150}>
           <AntDesign name="down" size={18} color="black" />
-        </Button>
-        <SelectDropdown
+        </Button> */}
+        {/* <SelectDropdown
           data={statuses}
           onSelect={(selectedItem, index) => {
             searcsearchByStatus(selectedItem)
@@ -178,15 +178,16 @@ const LeadsView = ({ route }) => {
             // if data array is an array of objects then return item.property to represent item in dropdown
             return item
           }}
-        />
-        <TouchableOpacity onPress={() => {
+        /> */}
+        {/* <TouchableOpacity onPress={() => {
           setshowSearchbox(!showSearchbox)
           setTimeout(() => {
             inputRef.current?.focus();
           }, 0);
           inputRef.current?.focus();
         }}>
-          <Ionicons name={!showSearchbox ? "search-circle" : 'close-circle-sharp'} size={48} color={lightTheme.lightGrey} /></TouchableOpacity>
+          <Ionicons name={!showSearchbox ? "search-circle" : 'close-circle-sharp'} size={48} color={lightTheme.lightGrey} />
+          </TouchableOpacity> */}
       </View>
 }
       {showSearchbox &&

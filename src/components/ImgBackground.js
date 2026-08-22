@@ -7,9 +7,7 @@ export default function ImgBackground(props) {
   return (
     <View style ={{maxHeight:'100%',width:'100%'}}>
     <ImageBackground
-    source={{
-      uri:props.imguri,
-    }}
+    source={typeof props.imguri === 'string' ? { uri: props.imguri } : props.imguri}
     resizeMode="cover"
     style={styles.img}>
        <View style={{width:"100%"}}>{props.children}</View> 

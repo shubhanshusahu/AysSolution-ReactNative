@@ -15,7 +15,7 @@ export default data = [
     {
         id: 'P3',
         title: 'Retirement Fund Policy',
-        img: "https://www.indiablooms.com/finance_pic/2020/02caafde0034bbe159a878536372143f.jpg"
+        img: require("../assets/policy/retire.png")
     },
     {
         id: 'P4',
@@ -85,7 +85,7 @@ export const Loandata = [
     {
         id: 'L2',
         title: 'Business Loan',
-        img: "https://www.herofincorp.com/public/admin_assets/upload/blog/609b952a606bf_small-business-loan-without-collateral.webp"
+        img: "https://redfortcapital.com/wp-content/uploads/2024/06/Business-Loan.jpg"
     },
     {
         id: 'L8',
@@ -105,7 +105,7 @@ export const Loandata = [
     {
         id: 'L5',
         title: 'Top-Up Loan',
-        img: "https://www.iifl.com/files/iifl_insights/images/Top-up20Loans_0.webp"
+        img: require('../assets/loans/topup.png')
     },
     {
         id: 'L6',

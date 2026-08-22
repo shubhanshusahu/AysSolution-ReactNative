@@ -111,7 +111,7 @@ const MyStack = () => {
           options={{ headerTitle: (props) => <LogoTitle title="Referrals" {...props} /> }}
         />
         <Stack.Screen name="admindashboard" component={AdminHome}
-          options={{ headerTitle: (props) => <><LogoTitle title="Dashboard" {...props} /><Logout /></> }}
+          options={{ headerTitle: (props) => <View style={{ flexDirection : 'row'}}><LogoTitle title="Dashboard" {...props} /><Logout /></View> }}
         />
         <Stack.Screen name="agentview" component={AgentView}
           options={{ headerTitle: (props) => <LogoTitle title="All Partners" {...props} /> }}

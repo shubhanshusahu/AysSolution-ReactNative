@@ -94,7 +94,7 @@ export default function Login() {
                 <TouchableOpacity style={styles.button} onPress={() =>
                   setsignupVisible(true)
                 }><Text style={styles.buttonText}>Create Account</Text>
-                  <MaterialCommunityIcons name="account-edit-outline" size={24} color="#fff" />
+                  {/* <MaterialCommunityIcons name="account-edit-outline" size={24} color="#fff" /> */}
                 </TouchableOpacity>
               </ViewAN>
               : <SignUp setsignupVisible={setsignupVisible} />}
