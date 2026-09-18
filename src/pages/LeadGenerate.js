@@ -50,14 +50,29 @@ const LeadGenerate = ({ route }) => {
 
             <TouchableOpacity
               activeOpacity={0.9}
-              onPress={() => {setImageViewerVisible(true)}}
+              onPress={() => { setImageViewerVisible(true) }}
             >
               <View animation="fadeInDown" duration={800} style={styles.imageCard}>
-                <Image
-                  style={styles.headerImg}
-                  resizeMode="contain"
-                  source={imageSource}
-                />
+
+
+
+                {typeof imageSource === 'string' ? (
+                  <FastImage
+                    style={styles.headerImg}
+                    source={{
+                      uri: imageSource,
+                      priority: FastImage.priority.normal,
+                      cache: FastImage.cacheControl.immutable,
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                ) : (
+                  <Image
+                    style={styles.headerImg}
+                    source={imageSource}
+                    resizeMode="cover"
+                  />
+                )}
               </View>
             </TouchableOpacity>
 

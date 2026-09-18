@@ -181,6 +181,29 @@ const styles = StyleSheet.create({
     borderRadius: 19,
     marginRight: 10,
   },
+  loginHeaderButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    backgroundColor: THEME.accent,
+
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+
+    borderRadius: 10,
+
+    marginRight: 8,
+  },
+
+  loginHeaderText: {
+    color: '#fff',
+
+    fontSize: 13,
+    fontWeight: '600',
+
+    marginLeft: 7,
+  },
   logoTitle: {
     fontSize: 16,
     fontWeight: 'bold',

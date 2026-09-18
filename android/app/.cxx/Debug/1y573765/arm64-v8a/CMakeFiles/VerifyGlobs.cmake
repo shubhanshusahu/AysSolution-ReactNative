@@ -12,6 +12,30 @@ if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   file(TOUCH_NOCREATE "D:/AYS-rn/android/app/.cxx/Debug/1y573765/arm64-v8a/CMakeFiles/cmake.verify_globs")
 endif()
 
+# react_codegen_SRCS at D:/AYS-rn/node_modules/@d11/react-native-fast-image/android/build/generated/source/codegen/jni/CMakeLists.txt:9 (file)
+file(GLOB NEW_GLOB LIST_DIRECTORIES true "D:/AYS-rn/node_modules/@d11/react-native-fast-image/android/build/generated/source/codegen/jni/*.cpp")
+set(OLD_GLOB
+  "D:/AYS-rn/node_modules/@d11/react-native-fast-image/android/build/generated/source/codegen/jni/RNFastImageSpec-generated.cpp"
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "D:/AYS-rn/android/app/.cxx/Debug/1y573765/arm64-v8a/CMakeFiles/cmake.verify_globs")
+endif()
+
+# react_codegen_SRCS at D:/AYS-rn/node_modules/@d11/react-native-fast-image/android/build/generated/source/codegen/jni/CMakeLists.txt:9 (file)
+file(GLOB NEW_GLOB LIST_DIRECTORIES true "D:/AYS-rn/node_modules/@d11/react-native-fast-image/android/build/generated/source/codegen/jni/react/renderer/components/RNFastImageSpec/*.cpp")
+set(OLD_GLOB
+  "D:/AYS-rn/node_modules/@d11/react-native-fast-image/android/build/generated/source/codegen/jni/react/renderer/components/RNFastImageSpec/ComponentDescriptors.cpp"
+  "D:/AYS-rn/node_modules/@d11/react-native-fast-image/android/build/generated/source/codegen/jni/react/renderer/components/RNFastImageSpec/EventEmitters.cpp"
+  "D:/AYS-rn/node_modules/@d11/react-native-fast-image/android/build/generated/source/codegen/jni/react/renderer/components/RNFastImageSpec/Props.cpp"
+  "D:/AYS-rn/node_modules/@d11/react-native-fast-image/android/build/generated/source/codegen/jni/react/renderer/components/RNFastImageSpec/ShadowNodes.cpp"
+  "D:/AYS-rn/node_modules/@d11/react-native-fast-image/android/build/generated/source/codegen/jni/react/renderer/components/RNFastImageSpec/States.cpp"
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "D:/AYS-rn/android/app/.cxx/Debug/1y573765/arm64-v8a/CMakeFiles/cmake.verify_globs")
+endif()
+
 # react_codegen_SRCS at D:/AYS-rn/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni/CMakeLists.txt:9 (file)
 file(GLOB NEW_GLOB LIST_DIRECTORIES true "D:/AYS-rn/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni/*.cpp")
 set(OLD_GLOB
@@ -30,6 +54,30 @@ set(OLD_GLOB
   "D:/AYS-rn/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni/react/renderer/components/rnasyncstorage/Props.cpp"
   "D:/AYS-rn/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni/react/renderer/components/rnasyncstorage/ShadowNodes.cpp"
   "D:/AYS-rn/node_modules/@react-native-async-storage/async-storage/android/build/generated/source/codegen/jni/react/renderer/components/rnasyncstorage/States.cpp"
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "D:/AYS-rn/android/app/.cxx/Debug/1y573765/arm64-v8a/CMakeFiles/cmake.verify_globs")
+endif()
+
+# react_codegen_SRCS at D:/AYS-rn/node_modules/@react-native-clipboard/clipboard/android/build/generated/source/codegen/jni/CMakeLists.txt:9 (file)
+file(GLOB NEW_GLOB LIST_DIRECTORIES true "D:/AYS-rn/node_modules/@react-native-clipboard/clipboard/android/build/generated/source/codegen/jni/*.cpp")
+set(OLD_GLOB
+  "D:/AYS-rn/node_modules/@react-native-clipboard/clipboard/android/build/generated/source/codegen/jni/rnclipboard-generated.cpp"
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "D:/AYS-rn/android/app/.cxx/Debug/1y573765/arm64-v8a/CMakeFiles/cmake.verify_globs")
+endif()
+
+# react_codegen_SRCS at D:/AYS-rn/node_modules/@react-native-clipboard/clipboard/android/build/generated/source/codegen/jni/CMakeLists.txt:9 (file)
+file(GLOB NEW_GLOB LIST_DIRECTORIES true "D:/AYS-rn/node_modules/@react-native-clipboard/clipboard/android/build/generated/source/codegen/jni/react/renderer/components/rnclipboard/*.cpp")
+set(OLD_GLOB
+  "D:/AYS-rn/node_modules/@react-native-clipboard/clipboard/android/build/generated/source/codegen/jni/react/renderer/components/rnclipboard/ComponentDescriptors.cpp"
+  "D:/AYS-rn/node_modules/@react-native-clipboard/clipboard/android/build/generated/source/codegen/jni/react/renderer/components/rnclipboard/EventEmitters.cpp"
+  "D:/AYS-rn/node_modules/@react-native-clipboard/clipboard/android/build/generated/source/codegen/jni/react/renderer/components/rnclipboard/Props.cpp"
+  "D:/AYS-rn/node_modules/@react-native-clipboard/clipboard/android/build/generated/source/codegen/jni/react/renderer/components/rnclipboard/ShadowNodes.cpp"
+  "D:/AYS-rn/node_modules/@react-native-clipboard/clipboard/android/build/generated/source/codegen/jni/react/renderer/components/rnclipboard/States.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")

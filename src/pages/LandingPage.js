@@ -25,23 +25,48 @@ export default function LandingPage() {
   const [advertisement, setAdvertisement] = useState([]);
   const [loadingAds, setLoadingAds] = useState(true);
 
-const handleLogin = async () => {
-  const userStr = await AsyncStorage.getItem("user")
-  if (userStr !== null) {
-    const parsedUser = JSON.parse(userStr)
-    if (parsedUser.Role === 'Admin')
-      navigation.navigate('admindashboard', { name: 'Jane' })
-    else
-      navigation.navigate('Home', { name: 'Jane' })
+  const handleLogin = async () => {
+    const userStr = await AsyncStorage.getItem("user")
+    if (userStr !== null) {
+      const parsedUser = JSON.parse(userStr)
+      if (parsedUser.Role === 'Admin')
+        navigation.navigate('admindashboard', { name: 'Jane' })
+      else
+        navigation.navigate('Home', { name: 'Jane' })
 
-    dispatch({
-      type: 'login',
-      data: parsedUser   // ✅ now correctly parsed
-    })
-  } else {
-    navigation.navigate('Login')
+      dispatch({
+        type: 'login',
+        data: parsedUser   // ✅ now correctly parsed
+      })
+    } else {
+      navigation.navigate('Login')
+    }
   }
-}
+
+  useEffect(() => {
+
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.loginHeaderButton}
+          onPress={handleLogin}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.loginHeaderButtonText}>
+            Login
+          </Text>
+
+          <AntDesign
+            name="login"
+            size={18}
+            color="#fff"
+            style={{ marginLeft: 8 }}
+          />
+        </TouchableOpacity>
+      ),
+    });
+
+  }, [navigation]);
 
   const openWhatsapp = (num) => {
     const url =
@@ -85,19 +110,11 @@ const handleLogin = async () => {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>AYS Solutions</Text>
-        <TouchableOpacity style={styles.button} onPress={handleLogin} activeOpacity={0.8}>
-          <Text style={styles.buttonText}>Login</Text>
-          <AntDesign name="login" size={18} color="#fff" style={{ marginLeft: 8 }} />
-        </TouchableOpacity>
-      </View>
-
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
-        fadingEdgeLength={50}
+        // fadingEdgeLength={10}
       >
         {/* Advisor contact card */}
         <View style={styles.advisorCard}>
@@ -175,6 +192,24 @@ const handleLogin = async () => {
             Policy · Personal Accident Policy · Critical Illness Policy · Term
             Policy
           </Text>
+          <View style={styles.cardActions}>
+            <TouchableOpacity
+              style={styles.whatsappButton}
+              onPress={() => openWhatsapp(ADVISOR_NUMBER)}
+              activeOpacity={0.8}
+            >
+              <MaterialCommunityIcons name="whatsapp" size={16} color="#fff" />
+              <Text style={styles.actionText}>WhatsApp</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.callActionButton}
+              onPress={() => callAdvisor(ADVISOR_NUMBER)}
+              activeOpacity={0.8}
+            >
+              <AntDesign name="phone" size={14} color="#fff" />
+              <Text style={styles.actionText}>Call</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Loans section */}
@@ -185,6 +220,24 @@ const handleLogin = async () => {
             Home Loan · Plot Loan · Top-up Loan · Mortgage Loan · Home Loan
             Transfer · Personal Loan · Business Loan · Commercial Loan
           </Text>
+          <View style={styles.cardActions}>
+            <TouchableOpacity
+              style={styles.whatsappButton}
+              onPress={() => openWhatsapp(ADVISOR_NUMBER)}
+              activeOpacity={0.8}
+            >
+              <MaterialCommunityIcons name="whatsapp" size={16} color="#fff" />
+              <Text style={styles.actionText}>WhatsApp</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.callActionButton}
+              onPress={() => callAdvisor(ADVISOR_NUMBER)}
+              activeOpacity={0.8}
+            >
+              <AntDesign name="phone" size={14} color="#fff" />
+              <Text style={styles.actionText}>Call</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -263,6 +316,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 8,
+  },
+  loginHeaderButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    backgroundColor: '#1f6feb',
+
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+
+    borderRadius: 14,
+
+    marginRight: 8,
+  },
+
+  loginHeaderButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 14,
   },
   whatsappIconButton: {
     backgroundColor: '#25D366',

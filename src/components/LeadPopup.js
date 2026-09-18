@@ -1,176 +1,1350 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native'
-import React, { useEffect } from 'react'
-import { Image } from 'react-native-animatable'
-import data, { Loandata, lightTheme, statuses } from '../data'
-import { useState } from 'react'
-import { TouchableOpacity } from 'react-native'
-import { Linking } from 'react-native'
-import { Platform } from 'react-native'
-import SelectDropdown from 'react-native-select-dropdown'
-import Button from './Elements/Button'
-import { GetReq, PutReq } from '../apiCalls/api'
-import { createThreeButtonAlert } from './Elements/Alert'
-import { useSelector } from 'react-redux'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Linking,
+  Platform,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Clipboard from '@react-native-clipboard/clipboard';
+import React, { useEffect, useState } from 'react';
+
+import { Image } from 'react-native-animatable';
+
+import data, {
+  Loandata,
+  statuses,
+} from '../data';
+
+import SelectDropdown from 'react-native-select-dropdown';
+
+import { GetReq, PutReq } from '../apiCalls/api';
+
+import { createThreeButtonAlert } from './Elements/Alert';
+
+import { useSelector } from 'react-redux';
+
+const CopyButton = ({ value }) => {
+
+  const handleCopy = () => {
+    if (!value) return;
+
+    Clipboard.setString(String(value));
+  };
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.6}
+      style={styles.copyButton}
+      onPress={handleCopy}
+    >
+      <Ionicons
+        name="copy-outline"
+        size={16}
+        color="#9298A2"
+      />
+    </TouchableOpacity>
+  );
+};
+
+
 
 const LeadPopup = (props) => {
 
-  const [plan, setplan] = useState(null)
-  const [selectedStatus, setselectedStatus] = useState('')
-  const [AgentUPI, setAgentUPI] = useState('')
-  let p = null
-  const {ads} = useSelector(state => state.reducer)
-  let d = [...data, ...Loandata, ...ads]
+  const [plan, setPlan] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState('');
+  const [agentUPI, setAgentUPI] = useState('');
+  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
+  const { ads } = useSelector(state => state.reducer);
+
+  const allData = [
+    ...data,
+    ...Loandata,
+    ...ads,
+  ];
+
+
+
+  const copyToClipboard = (value) => {
+    if (!value) return;
+
+    Clipboard.setString(String(value));
+  };
+
+  /*
+   * ---------------------------------------------------------
+   * Update status
+   * ---------------------------------------------------------
+   */
+
+
+
 
   const updateStatus = () => {
-    if (selectedStatus == 'Converted' && props.lead.AgentId != "Anonymous") {
-      createThreeButtonAlert("Agent Payment done?", () => PutReq('/leads', { 'Status': selectedStatus, 'LeadId': props.lead.LeadId, }, 'Status Updated'));
+
+    if (!selectedStatus) return;
+
+
+    if (
+      selectedStatus === 'Converted' &&
+      props.lead.AgentId !== 'Anonymous'
+    ) {
+
+      createThreeButtonAlert(
+        'Agent Payment done?',
+        () =>
+          PutReq(
+            '/leads',
+            {
+              Status: selectedStatus,
+              LeadId: props.lead.LeadId,
+            },
+            'Status Updated'
+          )
+      );
+
+    } else {
+
+      PutReq(
+        '/leads',
+        {
+          Status: selectedStatus,
+          LeadId: props.lead.LeadId,
+        },
+        'Status Updated'
+      );
+
     }
-    else
-      PutReq('/leads', { 'Status': selectedStatus, 'LeadId': props.lead.LeadId, }, 'Status Updated')
-  }
-  const UPIURL = `upi://pay?pa=${AgentUPI?.UPIid}&pn=Shubhanshu%20Sahu&mc=0000&mode=02&am=1&tn=testing&purpose=00`;
+
+  };
+
+
+  /*
+   * ---------------------------------------------------------
+   * UPI
+   * ---------------------------------------------------------
+   */
+
+  const UPIURL =
+    `upi://pay?pa=${agentUPI?.UPIid}` +
+    `&pn=Shubhanshu%20Sahu` +
+    `&mc=0000` +
+    `&mode=02` +
+    `&am=1` +
+    `&tn=testing` +
+    `&purpose=00`;
+
+
   const upiOpener = async () => {
-    Linking.openURL(UPIURL)
-  }
+
+    try {
+
+      await Linking.openURL(UPIURL);
+
+    } catch (error) {
+
+      console.log('UPI error:', error);
+
+    }
+
+  };
+
+
+  /*
+   * ---------------------------------------------------------
+   * SMS
+   * ---------------------------------------------------------
+   */
+
   const opensms = (num) => {
-    let msg = "Hi, Arvind here\n I want to share some Policy details with you, \n please let me know when can we have a chat."
-    const separator = Platform.OS === 'ios' ? '&' : '?'
-    const url = `sms:${num}${separator}body=${msg}`
-    Linking.openURL(url)
-  }
+
+    const msg =
+      'Hi, Arvind here\n' +
+      'I want to share some Policy details with you, ' +
+      'please let me know when can we have a chat.';
+
+    const separator =
+      Platform.OS === 'ios'
+        ? '&'
+        : '?';
+
+    const url =
+      `sms:${num}${separator}body=${encodeURIComponent(msg)}`;
+
+    Linking.openURL(url);
+
+  };
+
+
+  /*
+   * ---------------------------------------------------------
+   * WhatsApp
+   * ---------------------------------------------------------
+   */
 
   const openWhatsapp = (num) => {
-    let url = "whatsapp://send?text=" +
-      'Hi, Arvind here\n I want to share some Policy details with you, \n please let me know when can we have a chat.' +
-      "&phone=91" +
+
+    const message =
+      'Hi, Arvind here\n' +
+      'I want to share some Policy details with you, ' +
+      'please let me know when can we have a chat.';
+
+    const url =
+      'whatsapp://send?text=' +
+      encodeURIComponent(message) +
+      '&phone=91' +
       num;
-    Linking.openURL(url)
-  }
+
+    Linking.openURL(url);
+
+  };
+
+
+  /*
+   * ---------------------------------------------------------
+   * Call
+   * ---------------------------------------------------------
+   */
+
+  const callLead = () => {
+
+    const number =
+      Platform.OS === 'ios'
+        ? `telprompt:${props.lead.APhone}`
+        : `tel:${props.lead.APhone}`;
+
+    Linking.openURL(number);
+
+  };
+
+
+  /*
+   * ---------------------------------------------------------
+   * Load plan + UPI
+   * ---------------------------------------------------------
+   */
+
   useEffect(() => {
 
-    console.warn(d)
-    p = d.filter(item => item.id == props.lead.PlanId)
-    setplan(p)
-    getUPI()
-  }, [])
+    const selectedPlan =
+      allData.filter(
+        item => item.id == props.lead.PlanId
+      );
+
+    setPlan(selectedPlan);
+
+    getUPI();
+
+  }, []);
+
+
   const getUPI = async () => {
-    let temp = await GetReq('/upiid?phone=' + props.lead.AgentId)
-    setAgentUPI(temp.data[0])
-    console.warn(temp.data[0], 'temp')
-  }
+
+    try {
+
+      const temp =
+        await GetReq(
+          '/upiid?phone=' +
+          props.lead.AgentId
+        );
+
+      setAgentUPI(
+        temp?.data?.[0] || {}
+      );
+
+    } catch (error) {
+
+      console.log('UPI fetch error:', error);
+
+    }
+
+  };
+
+
+  /*
+   * ---------------------------------------------------------
+   * Plan title
+   * ---------------------------------------------------------
+   */
+
+  const planTitle =
+    plan !== null
+      ? plan[0]?.title ||
+      props.lead.ApplicantName
+      : 'Loading...';
+
   return (
+
     <View style={styles.main}>
-      <Text style={styles.nam}>{props.lead.ApplicantName}</Text>
-      <Text style={styles.textStyle}> Policy/Loan/Property: {plan !== null ? plan[0]?.title || props.lead.ApplicantName : 'loading...'}</Text>
 
-      <Text style={styles.textStyle}>Contact: {props.lead.APhone}</Text>
-      <Text style={styles.textStyle}>Location: {props.lead.ALocation}</Text>
+      {/* ================================================= */}
+      {/* HEADER */}
+      {/* ================================================= */}
 
-      <Text style={styles.textStyle}>Agent Contact: {props.lead.AgentId}</Text>
-      {
-        props.access == 'admin' &&
-        <>
-          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }}>
-            <TouchableOpacity onPress={() => {
-              let number = '';
-              if (Platform.OS === 'ios') {
-                number = 'telprompt:${' + props.lead.APhone + '}';
-              }
-              else {
-                number = 'tel:${' + props.lead.APhone + '}';
-              }
-              Linking.openURL(number);
-            }}><Image
-                animation="bounceInDown" Easing='easeIn' duration={1200}
-                style={styles.img} source={require('../../assets/call.png')} onPress={() => alert('pressed')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => opensms(props.lead.APhone)}>
-              <Image
-                animation="bounceInDown" Easing='easeIn' duration={1500}
-                style={styles.img} source={require('../../assets/sms.png')} onPress={() => alert('pressed')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => openWhatsapp(props.lead.APhone)}>
-              <Image
-                animation="bounceInDown" Easing='easeIn' duration={1800}
-                style={styles.img} source={require('../../assets/whatsapp.png')} onPress={() => alert('pressed')} />
-            </TouchableOpacity>
+      <View style={styles.header}>
+
+        <View style={styles.headerText}>
+
+          <View style={styles.nameRow}>
+
+            <Text
+              style={styles.name}
+              numberOfLines={1}
+            >
+              {props.lead.ApplicantName}
+            </Text>
+
+            <CopyButton
+              value={props.lead.ApplicantName}
+            />
+
           </View>
 
-          <SelectDropdown
-            data={statuses}
-            onSelect={(selectedItem, index) => {
-              setselectedStatus(selectedItem)
-            }}
-            defaultValue={props.lead.Status}
-            buttonStyle={styles.dropdown}
-            // style ={styles.dropdown}
-            buttonTextAfterSelection={(selectedItem, index) => {
+          <View style={styles.leadIdRow}>
 
-              if (selectedItem == 'Converted' && props.lead.AgentId != "Anonymous") {
-                upiOpener();
+            <Text style={styles.leadNumber}>
+              Lead #{props.lead.LeadId}
+            </Text>
+
+            <CopyButton
+              value={props.lead.LeadId}
+            />
+
+          </View>
+
+        </View>
+
+
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.closeIcon}
+          onPress={() =>
+            props.setModalVisible(false)
+          }
+        >
+
+          <Text style={styles.closeIconText}>
+            ×
+          </Text>
+
+        </TouchableOpacity>
+
+      </View>
+
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+
+        {/* ================================================= */}
+        {/* PLAN */}
+        {/* ================================================= */}
+
+        <View style={styles.section}>
+
+          <Text style={styles.sectionTitle}>
+            PRODUCT
+          </Text>
+
+          <View style={styles.infoCard}>
+
+            <View style={styles.infoIcon}>
+              <Text style={styles.infoIconText}>
+                ◈
+              </Text>
+            </View>
+
+            <View style={styles.infoContent}>
+
+              <Text style={styles.infoLabel}>
+                Policy / Loan / Property
+              </Text>
+
+              <Text
+                style={styles.infoValue}
+                numberOfLines={2}
+              >
+                {planTitle}
+              </Text>
+
+            </View>
+
+            <CopyButton
+              value={planTitle}
+            />
+
+          </View>
+
+        </View>
+
+
+        {/* ================================================= */}
+        {/* CONTACT DETAILS */}
+        {/* ================================================= */}
+
+        <View style={styles.section}>
+
+          <Text style={styles.sectionTitle}>
+            CONTACT
+          </Text>
+
+
+          <View style={styles.detailRow}>
+
+            <View style={styles.detailIcon}>
+              <Text style={styles.detailIconText}>
+                ☎
+              </Text>
+            </View>
+
+            <View style={styles.detailTextContainer}>
+
+              <Text style={styles.detailLabel}>
+                Phone
+              </Text>
+
+              <Text style={styles.detailValue}>
+                {props.lead.APhone || '--'}
+              </Text>
+
+            </View>
+
+            <CopyButton
+              value={props.lead.APhone}
+            />
+
+          </View>
+
+          <View style={styles.detailRow}>
+
+            <View style={styles.detailIcon}>
+
+              <Text style={styles.detailIconText}>
+                ◉
+              </Text>
+
+            </View>
+
+            <View style={styles.detailTextContainer}>
+
+              <Text style={styles.detailLabel}>
+                Location
+              </Text>
+
+              <Text
+                style={styles.detailValue}
+                numberOfLines={3}
+              >
+                {props.lead.ALocation || '--'}
+              </Text>
+
+            </View>
+
+            <CopyButton
+              value={props.lead.ALocation}
+            />
+
+          </View>
+
+        </View>
+
+
+        {/* ================================================= */}
+        {/* AGENT */}
+        {/* ================================================= */}
+
+        <View style={styles.section}>
+
+          <Text style={styles.sectionTitle}>
+            AGENT
+          </Text>
+
+          <View style={styles.agentCard}>
+
+            <View style={styles.agentAvatar}>
+
+              <Text style={styles.agentAvatarText}>
+                A
+              </Text>
+
+            </View>
+
+            <View style={styles.agentContent}>
+
+              <Text style={styles.agentLabel}>
+                Agent ID
+              </Text>
+
+              <Text style={styles.agentValue}>
+                {props.lead.AgentId || 'Anonymous'}
+              </Text>
+
+            </View>
+
+          </View>
+
+        </View>
+
+
+        {/* ================================================= */}
+        {/* CONTACT ACTIONS */}
+        {/* ================================================= */}
+
+        {props.access === 'admin' && (
+
+          <View style={styles.section}>
+
+            <Text style={styles.sectionTitle}>
+              QUICK ACTIONS
+            </Text>
+
+            <View style={styles.actionRow}>
+
+              {/* CALL */}
+
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.actionButton}
+                onPress={callLead}
+              >
+
+                <View style={styles.actionIcon}>
+
+                  <Image
+                    style={styles.actionImage}
+                    source={require('../../assets/call.png')}
+                  />
+
+                </View>
+
+                <Text style={styles.actionText}>
+                  Call
+                </Text>
+
+              </TouchableOpacity>
+
+
+              {/* SMS */}
+
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.actionButton}
+                onPress={() =>
+                  opensms(props.lead.APhone)
+                }
+              >
+
+                <View style={styles.actionIcon}>
+
+                  <Image
+                    style={styles.actionImage}
+                    source={require('../../assets/sms.png')}
+                  />
+
+                </View>
+
+                <Text style={styles.actionText}>
+                  SMS
+                </Text>
+
+              </TouchableOpacity>
+
+
+              {/* WHATSAPP */}
+
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.actionButton}
+                onPress={() =>
+                  openWhatsapp(props.lead.APhone)
+                }
+              >
+
+                <View style={styles.actionIcon}>
+
+                  <Image
+                    style={styles.actionImage}
+                    source={require('../../assets/whatsapp.png')}
+                  />
+
+                </View>
+
+                <Text style={styles.actionText}>
+                  WhatsApp
+                </Text>
+
+              </TouchableOpacity>
+
+            </View>
+
+          </View>
+
+        )}
+
+
+        {/* ================================================= */}
+        {/* STATUS */}
+        {/* ================================================= */}
+
+        {props.access === 'admin' && (
+
+          <View style={styles.section}>
+
+            <Text style={styles.sectionTitle}>
+              LEAD STATUS
+            </Text>
+
+            {/* Current status */}
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={[
+                styles.statusSelector,
+                statusDropdownOpen && styles.statusSelectorOpen,
+              ]}
+              onPress={() =>
+                setStatusDropdownOpen(prev => !prev)
               }
+            >
 
-              // text represented after item is selected
-              // if data array is an array of objects then return selectedItem.property to render after item is selected
-              return selectedItem
-            }}
-            rowTextForSelection={(item, index) => {
-              // text represented for each item in dropdown
-              // if data array is an array of objects then return item.property to represent item in dropdown
-              return item
-            }}
-          />
-        </>}
-      {selectedStatus != '' ? <Button text="Update Status" color={lightTheme.success} txtcolor={lightTheme.Secondary}
-        action={() => updateStatus()}
-      />
-        : ''}
-      <Button text="Close" color={lightTheme.close} action={() => props.setModalVisible(false)} />
+              <Text style={styles.statusSelectorText}>
+                {selectedStatus || props.lead.Status || 'Select status'}
+              </Text>
 
-      {/* <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={}>
-              <Text style={styles.textStyle}>Close</Text>
-            </Pressable> */}
+              <Ionicons
+                name={
+                  statusDropdownOpen
+                    ? 'chevron-up'
+                    : 'chevron-down'
+                }
+                size={18}
+                color="#9298A2"
+              />
+
+            </TouchableOpacity>
+
+
+            {/* Status options */}
+            {statusDropdownOpen && (
+
+              <View style={styles.statusOptions}>
+
+                {statuses.map((status, index) => {
+
+                  const isSelected =
+                    status ===
+                    (selectedStatus || props.lead.Status);
+
+                  return (
+
+                    <TouchableOpacity
+                      key={index}
+                      activeOpacity={0.7}
+                      style={[
+                        styles.statusOption,
+                        isSelected &&
+                        styles.statusOptionSelected,
+                      ]}
+                      onPress={() => {
+
+                        setSelectedStatus(status);
+
+                        setStatusDropdownOpen(false);
+
+                      }}
+                    >
+
+                      <Text
+                        style={[
+                          styles.statusOptionText,
+                          isSelected &&
+                          styles.statusOptionTextSelected,
+                        ]}
+                      >
+                        {status}
+                      </Text>
+
+                      {isSelected && (
+
+                        <Ionicons
+                          name="checkmark"
+                          size={18}
+                          color="#C8CCD2"
+                        />
+
+                      )}
+
+                    </TouchableOpacity>
+
+                  );
+
+                })}
+
+              </View>
+
+            )}
+
+
+            {/* Update button */}
+
+            {selectedStatus !== '' &&
+              selectedStatus !== props.lead.Status && (
+
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.updateButton}
+                  onPress={updateStatus}
+                >
+
+                  <Text style={styles.updateButtonText}>
+                    Update Status
+                  </Text>
+
+                </TouchableOpacity>
+
+              )}
+
+          </View>
+
+        )}
+
+
+        {/* ================================================= */}
+        {/* CLOSE */}
+        {/* ================================================= */}
+
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.closeButton}
+          onPress={() =>
+            props.setModalVisible(false)
+          }
+        >
+
+          <Text style={styles.closeButtonText}>
+            Close
+          </Text>
+
+        </TouchableOpacity>
+
+
+      </ScrollView>
+
     </View>
-  )
-}
 
-export default LeadPopup
+  );
 
+};
+
+
+export default LeadPopup;
+
+
+/* =========================================================
+   STYLES
+========================================================= */
 
 const styles = StyleSheet.create({
+
+  /*
+   * Main
+   */
+
   main: {
-    display: 'flex',
-    alignItems: 'flex-start'
+    width: '100%',
+
+    backgroundColor: '#111315',
+
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
   },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-    borderRadius: 20,
-    width: 200
+  nameRow: {
+    flexDirection: 'row',
   },
-  textStyle: {
-    color: 'black',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    padding: 5,
+
+  leadIdRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
   },
-  nam: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 25,
-    textAlign: 'center',
-    padding: 5,
+
+  copyButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 9,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    backgroundColor: '#202329',
+
+    borderWidth: 1,
+    borderColor: '#2B2F35',
+
+    marginLeft: 8,
   },
-  img: {
-    width: 50,
-    height: 50,
-    margin: 10,
+
+  copyIcon: {
+    color: '#9298A2',
+    fontSize: 16,
   },
-  dropdown: {
-    marginBottom: 7,
-    alignSelf: 'center',
-    borderRadius: 20,
+
+  /*
+   * Header
+   */
+
+  header: {
+    flexDirection: 'row',
+
+    alignItems: 'center',
+
+    justifyContent: 'space-between',
+
+    paddingBottom: 18,
+
+    borderBottomWidth: 1,
+
+    borderBottomColor: '#25282E',
+  },
+
+  headerText: {
+    flex: 1,
+
+    marginRight: 15,
+  },
+
+  name: {
+    color: '#F3F4F6',
+
+    fontSize: 22,
+
+    fontWeight: '700',
+
+    letterSpacing: -0.3,
+  },
+
+  leadNumber: {
+    color: '#747A85',
+
+    fontSize: 12,
+
+    marginTop: 4,
+  },
+
+  closeIcon: {
+    width: 36,
+
+    height: 36,
+
+    borderRadius: 12,
+
+    alignItems: 'center',
+
+    justifyContent: 'center',
+
+    backgroundColor: '#202329',
+
+    borderWidth: 1,
+
+    borderColor: '#2B2F35',
+  },
+
+  closeIconText: {
+    color: '#AEB3BB',
+
+    fontSize: 23,
+
+    fontWeight: '300',
+
+    lineHeight: 25,
+  },
+
+
+  /*
+   * Scroll
+   */
+
+  scrollContent: {
+    paddingTop: 20,
+
+    paddingBottom: 10,
+  },
+
+
+  /*
+   * Sections
+   */
+
+  section: {
+    marginBottom: 22,
+  },
+
+  sectionTitle: {
+    color: '#666D77',
+
+    fontSize: 10,
+
+    fontWeight: '700',
+
+    letterSpacing: 1.2,
+
+    marginBottom: 9,
+  },
+
+
+  /*
+   * Product
+   */
+
+  infoCard: {
+    flexDirection: 'row',
+
+    alignItems: 'center',
+
+    backgroundColor: '#181B20',
+
+    borderRadius: 14,
+
+    padding: 13,
+
+    borderWidth: 1,
+
+    borderColor: '#292C32',
+  },
+
+  statusSelector: {
+    width: '100%',
+    minHeight: 50,
+
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
+    paddingHorizontal: 15,
+
+    borderRadius: 13,
+
+    backgroundColor: '#181B20',
+
+    borderWidth: 1,
+    borderColor: '#292C32',
+  },
+
+  statusSelectorOpen: {
+    borderColor: '#444952',
+
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
+  },
+
+  statusSelectorText: {
+    flex: 1,
+
+    color: '#D5D8DD',
+
+    fontSize: 14,
+    fontWeight: '500',
+  },
+
+  statusOptions: {
+    width: '100%',
+
+    backgroundColor: '#181B20',
+
+    borderWidth: 1,
+    borderTopWidth: 0,
+
+    borderColor: '#444952',
+
+    borderBottomLeftRadius: 13,
+    borderBottomRightRadius: 13,
+
+    overflow: 'hidden',
+  },
+
+  statusOption: {
+    minHeight: 46,
+
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
+    paddingHorizontal: 15,
+
+    borderBottomWidth: 1,
+    borderBottomColor: '#25282E',
+  },
+
+  statusOptionSelected: {
+    backgroundColor: '#22252B',
+  },
+
+  statusOptionText: {
+    color: '#AEB3BC',
+
+    fontSize: 13,
+  },
+
+  statusOptionTextSelected: {
+    color: '#F1F2F4',
+
+    fontWeight: '600',
+  },
+  infoIcon: {
+    width: 40,
+
     height: 40,
-  }
-})
+
+    borderRadius: 12,
+
+    alignItems: 'center',
+
+    justifyContent: 'center',
+
+    backgroundColor: '#22252B',
+
+    marginRight: 12,
+  },
+
+  infoIconText: {
+    color: '#A7ADB7',
+
+    fontSize: 19,
+  },
+
+  infoContent: {
+    flex: 1,
+  },
+
+  infoLabel: {
+    color: '#686E78',
+
+    fontSize: 11,
+
+    marginBottom: 3,
+  },
+
+  infoValue: {
+    color: '#DDE0E4',
+
+    fontSize: 14,
+
+    fontWeight: '600',
+  },
+
+
+  /*
+   * Details
+   */
+
+  detailRow: {
+    flexDirection: 'row',
+
+    alignItems: 'center',
+
+    paddingVertical: 8,
+  },
+
+  detailIcon: {
+    width: 38,
+
+    height: 38,
+
+    borderRadius: 11,
+
+    alignItems: 'center',
+
+    justifyContent: 'center',
+
+    backgroundColor: '#181B20',
+
+    borderWidth: 1,
+
+    borderColor: '#292C32',
+
+    marginRight: 12,
+  },
+
+  detailIconText: {
+    color: '#9298A2',
+
+    fontSize: 15,
+  },
+
+  detailTextContainer: {
+    flex: 1,
+  },
+
+  detailLabel: {
+    color: '#676E78',
+
+    fontSize: 11,
+
+    marginBottom: 2,
+  },
+
+  detailValue: {
+    color: '#D5D8DD',
+
+    fontSize: 14,
+
+    fontWeight: '500',
+  },
+
+
+  /*
+   * Agent
+   */
+
+  agentCard: {
+    flexDirection: 'row',
+
+    alignItems: 'center',
+
+    backgroundColor: '#181B20',
+
+    borderRadius: 14,
+
+    padding: 12,
+
+    borderWidth: 1,
+
+    borderColor: '#292C32',
+  },
+
+  agentAvatar: {
+    width: 40,
+
+    height: 40,
+
+    borderRadius: 12,
+
+    alignItems: 'center',
+
+    justifyContent: 'center',
+
+    backgroundColor: '#24272D',
+
+    marginRight: 11,
+  },
+
+  agentAvatarText: {
+    color: '#B6BBC4',
+
+    fontSize: 15,
+
+    fontWeight: '700',
+  },
+
+  agentContent: {
+    flex: 1,
+  },
+
+  agentLabel: {
+    color: '#676E78',
+
+    fontSize: 10,
+
+    marginBottom: 2,
+  },
+
+  agentValue: {
+    color: '#D5D8DD',
+
+    fontSize: 13,
+
+    fontWeight: '500',
+  },
+
+
+  /*
+   * Actions
+   */
+
+  actionRow: {
+    flexDirection: 'row',
+
+    justifyContent: 'space-between',
+  },
+
+  actionButton: {
+    flex: 1,
+
+    alignItems: 'center',
+
+    justifyContent: 'center',
+
+    paddingVertical: 10,
+
+    marginHorizontal: 3,
+
+    borderRadius: 14,
+
+    backgroundColor: '#181B20',
+
+    borderWidth: 1,
+
+    borderColor: '#292C32',
+  },
+
+  actionIcon: {
+    width: 40,
+
+    height: 40,
+
+    borderRadius: 12,
+
+    alignItems: 'center',
+
+    justifyContent: 'center',
+
+    backgroundColor: '#22252B',
+
+    marginBottom: 6,
+  },
+
+  actionImage: {
+    width: 22,
+
+    height: 22,
+  },
+
+  actionText: {
+    color: '#AEB3BC',
+
+    fontSize: 11,
+
+    fontWeight: '600',
+  },
+
+
+  /*
+   * Dropdown
+   */
+
+  dropdown: {
+    width: '100%',
+
+    height: 48,
+
+    borderRadius: 13,
+
+    backgroundColor: '#181B20',
+
+    borderWidth: 1,
+
+    borderColor: '#292C32',
+
+    paddingHorizontal: 14,
+  },
+
+  dropdownText: {
+    color: '#D5D8DD',
+
+    fontSize: 13,
+
+    textAlign: 'left',
+  },
+
+  dropdownMenu: {
+    backgroundColor: '#181B20',
+
+    borderRadius: 13,
+
+    borderWidth: 1,
+
+    borderColor: '#292C32',
+  },
+
+  dropdownRow: {
+    backgroundColor: '#181B20',
+
+    borderBottomWidth: 1,
+
+    borderBottomColor: '#25282E',
+
+    height: 45,
+  },
+
+  dropdownRowText: {
+    color: '#C8CCD2',
+
+    fontSize: 13,
+
+    textAlign: 'left',
+
+    paddingHorizontal: 12,
+  },
+
+  dropdownArrow: {
+    color: '#858B95',
+
+    fontSize: 18,
+  },
+
+  dropdownArrowOpen: {
+    color: '#C8CCD2',
+  },
+
+
+  /*
+   * Update button
+   */
+
+  updateButton: {
+    height: 48,
+
+    borderRadius: 13,
+
+    alignItems: 'center',
+
+    justifyContent: 'center',
+
+    backgroundColor: '#E7E9EC',
+
+    marginTop: 10,
+  },
+
+  updateButtonText: {
+    color: '#141619',
+
+    fontSize: 13,
+
+    fontWeight: '700',
+  },
+
+
+  /*
+   * Close
+   */
+
+  closeButton: {
+    height: 46,
+
+    borderRadius: 13,
+
+    alignItems: 'center',
+
+    justifyContent: 'center',
+
+    backgroundColor: '#1A1D21',
+
+    borderWidth: 1,
+
+    borderColor: '#2A2D33',
+
+    marginTop: 2,
+  },
+
+  closeButtonText: {
+    color: '#AEB3BC',
+
+    fontSize: 13,
+
+    fontWeight: '600',
+  },
+
+});

@@ -15,7 +15,7 @@ import { View, Text, Image } from "react-native-animatable";
 
 const LeadsView = ({ route }) => {
   const [data, setdata] = useState([])
-  const {user} = useSelector(state => state.reducer)
+  const { user } = useSelector(state => state.reducer)
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
   const [calvisible, setcalvisible] = useState(false)
@@ -44,26 +44,24 @@ const LeadsView = ({ route }) => {
   // alert(quer)
   async function fetching(dat = null) {
     let mainquery = '/leads?page=' + currentPage + '&limit=10'
-    let dashboardquery =`/leadsbydashboard?quer=${quer}`
+    let dashboardquery = `/leadsbydashboard?quer=${quer}`
 
-    if(quer === null || quer ==='/' ){
-      if(access == 'admin')
-       d = await GetReq(mainquery)
-      else
-      {
-        let agentquery =`/leadsbydashboard?quer=AgentId =${user.Phone}`;
-        d =await GetReq(agentquery)
-         sethidLoadmore(true)
-      }
-      
-    }
-    else
-      { 
-        d = await GetReq(dashboardquery)
+    if (quer === null || quer === '/') {
+      if (access == 'admin')
+        d = await GetReq(mainquery)
+      else {
+        let agentquery = `/leadsbydashboard?quer=AgentId =${user.Phone}`;
+        d = await GetReq(agentquery)
         sethidLoadmore(true)
-      } 
+      }
 
-      checkNodata(Array.isArray(d.arr) ? d.arr : Array.isArray(d)? d:Array.isArray(d.data.arr)? d.data.arr : [])
+    }
+    else {
+      d = await GetReq(dashboardquery)
+      sethidLoadmore(true)
+    }
+
+    checkNodata(Array.isArray(d.arr) ? d.arr : Array.isArray(d) ? d : Array.isArray(d.data.arr) ? d.data.arr : [])
     if (refreshing) {
       setdata(d.arr)
       setCurrentPage(1)
@@ -73,11 +71,11 @@ const LeadsView = ({ route }) => {
     }
 
     setnewdata([...d.data.arr])
-    if(d){
-         dispatch({
-      type: 'leads',
-      data: d.data.arr
-    }) 
+    if (d) {
+      dispatch({
+        type: 'leads',
+        data: d.data.arr
+      })
     }
 
     settotalPages(d.data.totalPage)
@@ -104,23 +102,23 @@ const LeadsView = ({ route }) => {
     console.warn(dat1)
     let datevar = new Date(dat)
     d = await GetReq(`/leadsbydate?dat=${dat1}`)
-    checkNodata({arr:d.data})
-    console.warn({arr:d.data})
+    checkNodata({ arr: d.data })
+    console.warn({ arr: d.data })
     setdata(d.data)
   }
-  const checkNodata=(d)=>{
-    if(d.length==0){
+  const checkNodata = (d) => {
+    if (d.length == 0) {
       setnodata(true)
     }
     else
-    setnodata(false)
+      setnodata(false)
   }
   const searcsearchByStatus = async (status) => {
     setnodata(false)
     console.warn(status)
     sethidLoadmore(true)
     d = await GetReq(`/leadsbystatus?status=${status}`)
-    console.warn('Status res',d)
+    console.warn('Status res', d)
     checkNodata(d)
     setdata(d.data)
   }
@@ -149,7 +147,7 @@ const LeadsView = ({ route }) => {
   }
   return (
     <>{
-      access =='admin' &&
+      access == 'admin' &&
       <View animation="slideInUp" duration={800} style={styles.row}>
         {/* <Button text={calvisible ? 'Close calendar' : "Pick by Date"} color={calvisible ? lightTheme.close : lightTheme.lightGrey}
           txtcolor={lightTheme.Secondary}
@@ -189,7 +187,7 @@ const LeadsView = ({ route }) => {
           <Ionicons name={!showSearchbox ? "search-circle" : 'close-circle-sharp'} size={48} color={lightTheme.lightGrey} />
           </TouchableOpacity> */}
       </View>
-}
+    }
       {showSearchbox &&
         <View
           animation="lightSpeedIn" duration={800}
@@ -201,20 +199,20 @@ const LeadsView = ({ route }) => {
       {calvisible ? <CalendarPicker
         onDateChange={(d) => selectDate(d)}
       /> : ''}
-      {access == 'agentlistinadmin'? <Text style={styles.subtitle}>Agent lead count: {data.length}</Text>:''}
-      {!data || !data.length || data.length == 0  ? <View style={[styles.container, styles.horizontal]}>
+      {access == 'agentlistinadmin' ? <Text style={styles.subtitle}>Agent lead count: {data.length}</Text> : ''}
+      {!data || !data.length || data.length == 0 ? <View style={[styles.container, styles.horizontal]}>
         {!nodata ? <ActivityIndicator size={50} color={lightTheme.lightGrey} /> :
-         <Text>No data found</Text>
-          } 
+          <Text>No data found</Text>
+        }
       </View> :
         <FlatList
           data={data}
-          renderItem={({ item }) => <Lead key={item} data={item} fetching={fetching}  access ={access}/>}
+          style={{ backgroundColor: '#080807d6' }}
+          renderItem={({ item }) => <Lead key={item} data={item} fetching={fetching} access={access} />}
           keyExtractor={item => item.LeadId}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           ListFooterComponent={renderLoader}
-          fadingEdgeLength={50}
         // onEndReached={LoadMoreItem}
         // onEndReachedThreshold={0.5}
         // onEndReached={({ distanceFromEnd }) => {
@@ -274,6 +272,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap'
   },
   row: {
+    backgroundColor: '#0808072d',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center'
@@ -308,16 +307,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   subtitle: {
-    paddingHorizontal:15,
-    fontSize: 25,
-    color: "#38434D",
+    padding: 15,
+    fontSize: 20,
+    color: "#edf0f2",
+    backgroundColor : lightTheme.darkBg
   },
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-    // backgroundColor:'blue',
-    // height:300
+    alignItems: 'center',
+    backgroundColor: lightTheme.darkBg
+
   },
   horizontal: {
     flexDirection: 'column',
@@ -326,6 +326,7 @@ const styles = StyleSheet.create({
   },
   Loader: {
     marginVertical: 10,
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor : lightTheme.darkBg
   },
 });

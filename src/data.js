@@ -65,7 +65,8 @@ export const lightTheme = {
     warning: '#F59E0B',       // solid amber instead of translucent orange
     close: '#EF4444',         // solid red instead of translucent
     lightGrey: '#E5E5EA',     // clean light grey, opaque
-    grey: '#6B7280',          // balanced mid-grey
+    grey: '#6B7280',
+    darkBg : '#121212'          // balanced mid-grey
 }
 export const statuses = ["Applied", "Call not picked", "Not Reachable", "Not interested", "Interested", "In Progress"
     , "Follow up", "Converted", "Closed", "Property not approved", "Profile not matched", "Sanctioned"

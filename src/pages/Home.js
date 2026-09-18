@@ -11,20 +11,21 @@ import { TabView, SceneMap } from 'react-native-tab-view';
 import Policy from './Policy';
 import Loan from './Loan';
 import MutualFund from './MutualFund';
+import { lightTheme } from '../data';
 
 const FirstRoute = () => (
-  <ScrollView fadingEdgeLength={50} style={[styles.container, { backgroundColor: '#fff' }]} >
+  <ScrollView fadingEdgeLength={10} style={[styles.container, { backgroundColor: lightTheme.darkBg }]} >
     <Policy />
 
   </ScrollView>
 );
 const SecondRoute = () => (
-  <ScrollView fadingEdgeLength={50} style={[styles.container, { backgroundColor: '#fff' }]} >
+  <ScrollView fadingEdgeLength={10} style={[styles.container, { backgroundColor: '#100f0f7d' }]} >
     <Loan />
   </ScrollView>
 );
 const ThirdRoute = () => (
-  <ScrollView fadingEdgeLength={50} style={[styles.container, { backgroundColor: '#fff' }]} >
+  <ScrollView fadingEdgeLength={10} style={[styles.container, { backgroundColor: '#100f0f7d' }]} >
     <MutualFund />
   </ScrollView>
 );

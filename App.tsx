@@ -5,12 +5,13 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import store from './src/components/redux/store.js'
 import {Provider} from 'react-redux'
 import Navigator from './src/components/Navigation/Nav.js'
+import { lightTheme } from './src/data.js';
 
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor :lightTheme.darkBg  }}>
           <Provider store={store}>
             <Navigator/>
           </Provider>

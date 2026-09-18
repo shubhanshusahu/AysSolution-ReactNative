@@ -43,7 +43,27 @@ rule CUSTOM_COMMAND
 #############################################
 # Rule for compiling CXX files.
 
+rule CXX_COMPILER__react_codegen_RNFastImageSpec_Debug
+  depfile = $DEP_FILE
+  deps = gcc
+  command = C:\Users\Hp\AppData\Local\Android\Sdk\ndk\27.1.12297006\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe --target=aarch64-none-linux-android24 --sysroot=C:/Users/Hp/AppData/Local/Android/Sdk/ndk/27.1.12297006/toolchains/llvm/prebuilt/windows-x86_64/sysroot $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
 rule CXX_COMPILER__react_codegen_rnasyncstorage_Debug
+  depfile = $DEP_FILE
+  deps = gcc
+  command = C:\Users\Hp\AppData\Local\Android\Sdk\ndk\27.1.12297006\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe --target=aarch64-none-linux-android24 --sysroot=C:/Users/Hp/AppData/Local/Android/Sdk/ndk/27.1.12297006/toolchains/llvm/prebuilt/windows-x86_64/sysroot $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__react_codegen_rnclipboard_Debug
   depfile = $DEP_FILE
   deps = gcc
   command = C:\Users\Hp\AppData\Local\Android\Sdk\ndk\27.1.12297006\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe --target=aarch64-none-linux-android24 --sysroot=C:/Users/Hp/AppData/Local/Android/Sdk/ndk/27.1.12297006/toolchains/llvm/prebuilt/windows-x86_64/sysroot $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -64,6 +84,16 @@ rule CXX_COMPILER__react_codegen_rngesturehandler_codegen_Debug
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__react_codegen_RNImagePickerSpec_Debug
+  depfile = $DEP_FILE
+  deps = gcc
+  command = C:\Users\Hp\AppData\Local\Android\Sdk\ndk\27.1.12297006\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe --target=aarch64-none-linux-android24 --sysroot=C:/Users/Hp/AppData/Local/Android/Sdk/ndk/27.1.12297006/toolchains/llvm/prebuilt/windows-x86_64/sysroot $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__react_codegen_pagerview_Debug
   depfile = $DEP_FILE
   deps = gcc
   command = C:\Users\Hp\AppData\Local\Android\Sdk\ndk\27.1.12297006\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe --target=aarch64-none-linux-android24 --sysroot=C:/Users/Hp/AppData/Local/Android/Sdk/ndk/27.1.12297006/toolchains/llvm/prebuilt/windows-x86_64/sysroot $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -118,16 +148,6 @@ rule CXX_SHARED_LIBRARY_LINKER__react_codegen_rnscreens_Debug
   rspfile = $RSP_FILE
   rspfile_content = $in $LINK_PATH $LINK_LIBRARIES
   restat = $RESTAT
-
-
-#############################################
-# Rule for compiling CXX files.
-
-rule CXX_COMPILER__react_codegen_pagerview_Debug
-  depfile = $DEP_FILE
-  deps = gcc
-  command = C:\Users\Hp\AppData\Local\Android\Sdk\ndk\27.1.12297006\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe --target=aarch64-none-linux-android24 --sysroot=C:/Users/Hp/AppData/Local/Android/Sdk/ndk/27.1.12297006/toolchains/llvm/prebuilt/windows-x86_64/sysroot $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
-  description = Building CXX object $out
 
 
 #############################################

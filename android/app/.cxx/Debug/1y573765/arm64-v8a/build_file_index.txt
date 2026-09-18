@@ -1,4 +1,6 @@
+D:\AYS-rn\node_modules\@d11\react-native-fast-image\android\build\generated\source\codegen\jni\CMakeLists.txt
 D:\AYS-rn\node_modules\@react-native-async-storage\async-storage\android\build\generated\source\codegen\jni\CMakeLists.txt
+D:\AYS-rn\node_modules\@react-native-clipboard\clipboard\android\build\generated\source\codegen\jni\CMakeLists.txt
 D:\AYS-rn\node_modules\react-native-gesture-handler\android\build\generated\source\codegen\jni\CMakeLists.txt
 D:\AYS-rn\node_modules\react-native-image-picker\android\build\generated\source\codegen\jni\CMakeLists.txt
 D:\AYS-rn\node_modules\react-native-pager-view\android\build\generated\source\codegen\jni\CMakeLists.txt

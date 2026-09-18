@@ -32,18 +32,34 @@ export const GetReq = async (route) => {
     }
 }
 export const PutReq = async (route, data, msg = '', doSomething = () => { }) => {
-    let result
-    axios.put(BaseUrl + route, data)
+    let result = await axios.put(BaseUrl + route, data)
         .then(res => {
-            // console.warn('Post requ wardn..',res)
             result = res
             if (msg != '')
                 alert(msg)
             if (res.data.length > 0)
                 doSomething(res.data)
+            return res
         })
         .catch(e => {
             console.warn(e)
         })
+    return result
+}
+
+
+export const DeleteReq = async (route, msg = '') => {
+    let result = await axios.delete(BaseUrl + route)
+        .then(res => {
+            result = res
+            if (msg) {
+                alert(msg)
+            }
+            return res
+        })
+        .catch(e => {
+            console.warn(e)
+        })
+
     return result
 }
